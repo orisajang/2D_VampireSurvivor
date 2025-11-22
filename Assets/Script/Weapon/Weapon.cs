@@ -21,7 +21,7 @@ public class Weapon
 
 
 
-    public Weapon(GameObject prefab, Transform position, eWeaponType type, int dmg, int cd)
+    public Weapon(GameObject prefab, Transform position , eWeaponType type, int dmg, int cd)
     {
         _prefab = prefab;
         _firePosition = position;
@@ -33,22 +33,22 @@ public class Weapon
     }
 
     //Player에서 1초마다 시간체크하고 0초되면 발사 동작 진행
-    public void Tick(int time)
+    public void Tick(int time, Transform shotDir)
     {
         currentCoolDown -= time;
         if(currentCoolDown <= 0)
         {
             currentCoolDown = _coolDown;
-            WeaponAttack();
+            WeaponAttack(shotDir);
         }
     }
 
-    public void WeaponAttack()
+    public void WeaponAttack(Transform shotDir)
     {
         switch (_weaponType)
         {
             case eWeaponType.ShootBullet:
-                ShootBulletFunc();
+                ShootBulletFunc(shotDir);
                 break;
             case eWeaponType.RotateShield:
                 Debug.Log("쉴드 공격");
@@ -59,10 +59,12 @@ public class Weapon
         }
     }
 
-    private void ShootBulletFunc()
+    private void ShootBulletFunc(Transform shotDir)
     {
         //총알 발사
         Debug.Log("발사공격");
         GameObject obj = GameObject.Instantiate(_prefab, _firePosition.position, _firePosition.rotation, null);
+        Bullet bullet = obj.GetComponent<Bullet>();
+        bullet.SetBulletMoveDirection(shotDir);
     }
 }

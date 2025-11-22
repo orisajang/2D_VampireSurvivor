@@ -1993,6 +1993,7 @@ GameObject:
   - component: {fileID: 1706755811640222265}
   - component: {fileID: 7330923064232187295}
   - component: {fileID: 7862778130800922858}
+  - component: {fileID: 667088059017427332}
   m_Layer: 0
   m_Name: PlayerPrefab
   m_TagString: Untagged
@@ -2043,6 +2044,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponsData:
   - {fileID: 11400000, guid: b98bad6911d5f674ab893dd323bf6c3e, type: 2}
+--- !u!114 &667088059017427332
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7460739469218924793}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 660f793b299a6374abb4099ff6a439c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _radius: 10
+  _layer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1 &7587925467443581753
 GameObject:
   m_ObjectHideFlags: 0
