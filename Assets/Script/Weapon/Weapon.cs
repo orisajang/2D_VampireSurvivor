@@ -2,12 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum eWeaponType
-{
-    ShootBullet,
-    RotateShield
-}
-
 public class Weapon
 {
     //무기별 정보 셋팅
@@ -18,7 +12,6 @@ public class Weapon
     Transform _firePosition;
 
     private int currentCoolDown;
-
 
 
     public Weapon(GameObject prefab, Transform position , eWeaponType type, int dmg, int cd)
@@ -66,6 +59,7 @@ public class Weapon
         GameObject obj = GameObject.Instantiate(_prefab, _firePosition.position, _firePosition.rotation, null);
         Bullet bullet = obj.GetComponent<Bullet>();
         bullet.SetBulletMoveDirection(shotDir);
+        bullet.SetWeaponDamage(_weaponDamage);
     }
     private void ShootRotateShield(Transform plyDir)
     {
@@ -74,5 +68,6 @@ public class Weapon
         GameObject obj = GameObject.Instantiate(_prefab, vec, plyDir.rotation, plyDir);
         RotateShield rotateShield = obj.GetComponent<RotateShield>();
         rotateShield.SetRotatePoint(plyDir);
+        rotateShield.SetWeaponDamage(_weaponDamage);
     }
 }
