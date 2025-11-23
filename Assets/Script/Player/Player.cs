@@ -16,9 +16,40 @@ public class Player : Unit
     //범위내의 가장 가까운적 탐색용 클래스
     ScanTarget _scanTarget;
 
+    //상태패턴을 위한 플레이어 상태 인터페이스
+    IPlayerState _playerState;
+
+    //몬스터한테 데미지받았을떄 (삭제예정)
+    public bool isTakeDamage = false;
+
     private void Awake()
     {
         _scanTarget = GetComponent<ScanTarget>();
+    }
+    private void Start()
+    {
+        _playerState = new PlayerIdleState(this);
+    }
+    private void OnEnable()
+    {
+        PlayerAttackWithWeapon();
+        StartWeaponAttack();
+    }
+    private void OnDisable()
+    {
+        RemoveAllWeapon();
+        StopWeaponAttack();
+    }
+
+    private void Update()
+    {
+        _playerState?.Update();
+    }
+    public void SetState(IPlayerState state)
+    {
+        state?.Exit();
+        _playerState = state;
+        state.Enter();
     }
 
     //모든 플레이어 무기를 가지고 공격을 한다
@@ -69,16 +100,7 @@ public class Player : Unit
         
     }
 
-    private void OnEnable()
-    {
-        PlayerAttackWithWeapon();
-        StartWeaponAttack();
-    }
-    private void OnDisable()
-    {
-        RemoveAllWeapon();
-        StopWeaponAttack();
-    }
+    
 
     protected override void Attack()
     {

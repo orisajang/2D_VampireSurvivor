@@ -8,6 +8,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _moveSpeed = 3.0f;
     InputAction action;
     Vector2 moveDir;
+
+    public bool isControllAble = true;
     private void Awake()
     {
         action = InputSystem.actions["Move"];
@@ -21,7 +23,7 @@ public class PlayerController : MonoBehaviour
     }
     private void Update()
     {
-        if (moveDir != Vector2.zero)
+        if (moveDir != Vector2.zero && isControllAble)
         {
             Vector3 moveVector3 = new Vector3(moveDir.x, moveDir.y, 0).normalized;
             transform.position += (moveVector3 * Time.deltaTime * _moveSpeed);
