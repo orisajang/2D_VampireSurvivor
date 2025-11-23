@@ -5,7 +5,7 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     [SerializeField] float _bulletSpeed = 2.0f;
-    [SerializeField]Transform _moveDir;
+    [SerializeField] Transform _moveDir;
     Rigidbody2D _rigidbody;
 
 

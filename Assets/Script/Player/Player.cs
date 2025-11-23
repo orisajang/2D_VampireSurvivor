@@ -61,7 +61,7 @@ public class Player : Unit
         {
             foreach(var item in _weaponHaveList)
             {
-                item.Tick(1, _scanTarget.NearestTarget);
+                item.Tick(1, gameObject.transform, _scanTarget.NearestTarget);
             }
             yield return _delay;
         }
