@@ -9,6 +9,7 @@ public class Monster : Unit
     public Action<Monster> deathEvent;
     public eMonsterType MonsterType { get; private set; }
 
+    //스크립터블 오브젝트에서 몬스터정보를 설정
     public void Init(MonsterSO monsterSO)
     {
         _attack = monsterSO.attack;

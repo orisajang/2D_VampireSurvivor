@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5539aeb2fb1a0234aba6cba58fa9ce49, type: 3}
   m_Name: WeaponData1
   m_EditorClassIdentifier: 
-  weaponDamage: 1
+  weaponDamage: 4
   coolDown: 2
   weaponType: 0
   weaponPrefab: {fileID: 476164170670637829, guid: 463f411c0982f7348a36ef83e07b0386, type: 3}

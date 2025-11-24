@@ -4,73 +4,115 @@ using UnityEngine;
 
 public class MonsterManager : Singleton<MonsterManager>
 {
-    //몬스터에 대한 스크립트 정보를 얻어오기 위해서 사용 (Monobehavior는 new로 클래스 생성하면 안된다)
-    //[SerializeField] List<Monster> monsterPrefabs;
-    [SerializeField] List<MonsterSO> monstersDataList;
-    //리스트로 소환시킨 몬스터의 정보를 가지고있음.
-    List<Monster> monsterList = new List<Monster>();
+    //스크립터블 오브젝트로 몬스터를 소환할때마다 몬스터 정보를 넣을것이다. 
+    //오브젝트 풀을 이용하여 몬스터 타입마다 몬스터를 미리 생성할 것이다.
 
-    //몬스터가 죽는다
-    //몬스터에서 Invoke를 쏴준다.
-    //몬스터 매니저에서 해당 행동에 대해 정의
-    //몬스터에 있는 이벤드들을 전부 구독 += 한다.
-    //
+    //몬스터 정보(스크립터블 오브젝트)
+    [SerializeField] List<MonsterSO> monsterDatas = new List<MonsterSO>();
+    int monsterCount = 0;
 
+    //소환 지점 정보
+    [SerializeField] Transform spawnPointInfo;
+    List<Transform> spawnPoints = new List<Transform>();
 
-    //오브젝트풀 사용해서 미리 몬스터 생성해두기
-    //딕셔너리로 몬스터 타입마다 풀을 만들기
-    Dictionary<eMonsterType, ObjPool<Monster>> monsterPool = new Dictionary<eMonsterType, ObjPool<Monster>>();
+    //오브젝트풀 (몬스터 타입별)
+    [SerializeField] int poolSize = 10;
+    private Dictionary<eMonsterType, ObjPool<Monster>> monsterPools = new Dictionary<eMonsterType, ObjPool<Monster>>();
+
+    //소환 코루틴
+    Coroutine spawnCoroutine;
+    WaitForSeconds _spawnDelay;
+
+    //삭제예정. 테스트용. 스테이지매니저에서 넘어오는 소환될 몬스터 enum리스트
+    List<eMonsterType> spawnMonsterInfo = new List<eMonsterType>();
+    int spawnTime = 2;
+
+    //삭제예정. 테스트용.
+    public void SetMonsterInfo()
+    {
+        spawnMonsterInfo.Add(eMonsterType.Rat);
+        spawnMonsterInfo.Add(eMonsterType.Rat);
+        spawnMonsterInfo.Add(eMonsterType.Rat);
+        spawnMonsterInfo.Add(eMonsterType.Ghost);
+        spawnMonsterInfo.Add(eMonsterType.Ghost);
+    }
+
     protected override void Awake()
     {
         base.Awake();
-
-        if(monstersDataList.Count > 0)
+        //초기 오브젝트풀 설정
+        foreach(var item in monsterDatas)
         {
-            //Monster mon = monstersDataList[0].monsterPrefab.GetComponent<Monster>();
-            //monsterPool = new ObjPool<Monster>(mon, 10, gameObject.transform);
-        }
-        foreach(MonsterSO item in monstersDataList)
-        {
-            Monster mon = item.monsterPrefab.GetComponent<Monster>();
             eMonsterType type = item.monsterType;
-            monsterPool[type] = new ObjPool<Monster>(mon, 10, gameObject.transform);
+            Monster monsterBuf = item.monsterPrefab.GetComponent<Monster>();
+            monsterPools[type] = new ObjPool<Monster>(monsterBuf, poolSize, gameObject.transform);
         }
-        SpawnMonsterSetForTest();
+
+        //몬스터 소환지점 설정
+        SetSpawnPoint();
+        _spawnDelay = new WaitForSeconds(spawnTime);
+
+        SetMonsterInfo(); //테스트용. 삭제예정
     }
+
     private void Start()
     {
-        CreateMonster(spawnMonsterList);
-    }
-
-    List<eMonsterType> spawnMonsterList = new List<eMonsterType>();
-    public void SpawnMonsterSetForTest()
-    {
-        spawnMonsterList.Add(eMonsterType.Rat);
-        spawnMonsterList.Add(eMonsterType.Rat);
-        spawnMonsterList.Add(eMonsterType.Rat);
-        spawnMonsterList.Add(eMonsterType.Ghost);
-        spawnMonsterList.Add(eMonsterType.Ghost);
-    }
-
-    //몬스터 생성
-    public void CreateMonster(List<eMonsterType> monsterList)
-    {
-        for(int i=0; i< monsterList.Count; i++)
+        if(spawnCoroutine == null)
         {
-            eMonsterType type = monsterList[i];
-            ObjPool<Monster> item = monsterPool[type];
-            Monster mon =  item.GetObject();
-
-            MonsterSO monsterSO = monstersDataList.Find(x => x.monsterType == type);
-            mon.Init(monsterSO);
-            mon.deathEvent += SendMonsterDead;
+            spawnCoroutine = StartCoroutine(SpawnMonsterRoutine(spawnMonsterInfo));
         }
     }
 
-    public void SendMonsterDead(Monster mon)
+    private void SetSpawnPoint()
     {
-        mon.deathEvent -= SendMonsterDead;
-        monsterPool[mon.MonsterType].ReturnObject(mon);
+        foreach (Transform childPos in spawnPointInfo)
+        {
+            spawnPoints.Add(childPos);
+        }
     }
+
+    //몬스터 생성 (오브젝트풀에서 하나씩 꺼냄)
+    public void SpawnMonster(eMonsterType type)
+    {
+        //foreach(eMonsterType type in monsterInfos)
+        {
+            //몬스터 초기 설정
+            Monster monsterBuf =  monsterPools[type].GetObject();
+            monsterBuf.deathEvent += DeSpawnMonster;
+
+            //몬스터 소환 위치 지정
+            int selectPoint = Random.Range(0, spawnPoints.Count);
+            monsterBuf.transform.position = spawnPoints[selectPoint].position;
+
+            //스크립터블 오브젝트에서 몬스터능력치 정보를 Set 해준다
+            MonsterSO monsterInfo = monsterDatas.Find(x => x.monsterType == type);
+            monsterBuf.Init(monsterInfo);
+
+
+            monsterCount++;
+
+        }
+    }
+
+    public void DeSpawnMonster(Monster mon)
+    {
+        mon.deathEvent -= DeSpawnMonster;
+        eMonsterType type = mon.MonsterType;
+        monsterPools[type].ReturnObject(mon);
+
+        monsterCount--;
+    }
+
+    //코루틴으로 생성
+    IEnumerator SpawnMonsterRoutine(List<eMonsterType> monsterInfos)
+    {
+        foreach(var item in monsterInfos)
+        {
+            SpawnMonster(item);
+            yield return _spawnDelay;
+        }
+
+    }
+
 
 }
