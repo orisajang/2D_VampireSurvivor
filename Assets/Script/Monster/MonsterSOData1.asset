@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9795b4ec7e735fd4c84aa9ced59c45a1, type: 3}
-  m_Name: MonsterSOData
+  m_Name: MonsterSOData1
   m_EditorClassIdentifier: 
   hp: 5
   attack: 1
-  defense: 1
-  monsterPrefab: {fileID: 3070396554959872835, guid: c9d3db5aeea181d4c8d194e0bf21f7ae, type: 3}
-  monsterType: 0
+  defense: 2
+  monsterPrefab: {fileID: 5334060259897794243, guid: 61bfcdaa24b877d44802598bf60c73cc, type: 3}
+  monsterType: 1

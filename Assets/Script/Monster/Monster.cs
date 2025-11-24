@@ -1,9 +1,22 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Monster : Unit
 {
+    //MonsterManager로 보내는 사망 이벤트
+    public Action<Monster> deathEvent;
+    public eMonsterType MonsterType { get; private set; }
+
+    public void Init(MonsterSO monsterSO)
+    {
+        _attack = monsterSO.attack;
+        _defense = monsterSO.defense;
+        _hp = monsterSO.hp;
+        MonsterType = monsterSO.monsterType;
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         Debug.Log("감지");
@@ -16,6 +29,13 @@ public class Monster : Unit
 
             _hp = currentHp;
             Debug.Log("현재몬스터HP: " + _hp);
+
+            //사망했다면 이벤트 발송
+            if(_hp <=0)
+            {
+                deathEvent?.Invoke(this);
+            }
+
         }
     }
 

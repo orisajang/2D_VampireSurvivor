@@ -6,13 +6,15 @@ public class ObjPool<T> where T : MonoBehaviour
 {
     //몬스터, 적, 총알, 파티클 등
     Queue<T> pool;
-    private T prefab;
-    Transform poolParent;
+    private T prefab; 
+    Transform poolParent;   //하위객체에 넣어서 관리할때 사용
+    int aliveCount; //풀에 활성화되어있는 객체 숫자
     public ObjPool(T prefab, int initSize, Transform parentPos = null)
     {
         this.prefab = prefab;
         pool = new Queue<T>();
         this.poolParent = parentPos;
+        aliveCount = 0;
 
         for (int i = 0; i < initSize; i++)
         {
@@ -20,7 +22,7 @@ public class ObjPool<T> where T : MonoBehaviour
             T instance;
             if (poolParent == null)
             {
-                instance = Object.Instantiate(prefab, poolParent);
+                instance = Object.Instantiate(prefab);
             }
             else
             {
@@ -33,6 +35,7 @@ public class ObjPool<T> where T : MonoBehaviour
 
     public T GetObject()
     {
+        aliveCount++;
         if (pool.Count > 0)
         {
             T obj = pool.Dequeue();
@@ -48,14 +51,18 @@ public class ObjPool<T> where T : MonoBehaviour
         else
         {
             newObj = Object.Instantiate(prefab, poolParent);
-
         }
         return newObj;
     }
 
     public void ReturnObject(T obj)
     {
+        aliveCount--;
         pool.Enqueue(obj);
         obj.gameObject.SetActive(false);
+    }
+    public int AlivePoolCount()
+    {
+        return aliveCount;
     }
 }
