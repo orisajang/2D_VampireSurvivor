@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,6 +23,9 @@ public class MonsterManager : Singleton<MonsterManager>
     //소환 코루틴
     Coroutine spawnCoroutine;
     WaitForSeconds _spawnDelay;
+
+    //몬스터 사망 이벤트
+    public Action<int> monsterDead;
 
     //삭제예정. 테스트용. 스테이지매니저에서 넘어오는 소환될 몬스터 enum리스트
     List<eMonsterType> spawnMonsterInfo = new List<eMonsterType>();
@@ -81,7 +85,7 @@ public class MonsterManager : Singleton<MonsterManager>
             monsterBuf.deathEvent += DeSpawnMonster;
 
             //몬스터 소환 위치 지정
-            int selectPoint = Random.Range(0, spawnPoints.Count);
+            int selectPoint = UnityEngine.Random.Range(0, spawnPoints.Count);
             monsterBuf.transform.position = spawnPoints[selectPoint].position;
 
             //스크립터블 오브젝트에서 몬스터능력치 정보를 Set 해준다
@@ -98,12 +102,15 @@ public class MonsterManager : Singleton<MonsterManager>
     {
         //경험치 구슬 생성
         ExpPointSpawner.Instance.CreateExpPoint(mon.transform);
-
+        //몬스터 사망 이벤트 Invoke
+        monsterDead?.Invoke(mon.Reward);
         //몬스터 풀에 반환
         mon.deathEvent -= DeSpawnMonster;
         eMonsterType type = mon.MonsterType;
         monsterPools[type].ReturnObject(mon);
         monsterCount--;
+
+        
     }
 
     //코루틴으로 생성

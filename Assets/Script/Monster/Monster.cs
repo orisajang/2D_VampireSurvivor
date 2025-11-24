@@ -8,6 +8,8 @@ public class Monster : Unit
     //MonsterManager로 보내는 사망 이벤트
     public Action<Monster> deathEvent;
     public eMonsterType MonsterType { get; private set; }
+    private int _reward;
+    public int Reward => _reward;
 
     //스크립터블 오브젝트에서 몬스터정보를 설정
     public void Init(MonsterSO monsterSO)
@@ -15,6 +17,7 @@ public class Monster : Unit
         _attack = monsterSO.attack;
         _defense = monsterSO.defense;
         _hp = monsterSO.hp;
+        _reward = monsterSO.reward;
         MonsterType = monsterSO.monsterType;
     }
 

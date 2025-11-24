@@ -15,5 +15,6 @@ MonoBehaviour:
   hp: 5
   attack: 1
   defense: 2
+  reward: 5
   monsterPrefab: {fileID: 5334060259897794243, guid: 61bfcdaa24b877d44802598bf60c73cc, type: 3}
   monsterType: 1
