@@ -96,10 +96,13 @@ public class MonsterManager : Singleton<MonsterManager>
 
     public void DeSpawnMonster(Monster mon)
     {
+        //경험치 구슬 생성
+        ExpPointSpawner.Instance.CreateExpPoint(mon.transform);
+
+        //몬스터 풀에 반환
         mon.deathEvent -= DeSpawnMonster;
         eMonsterType type = mon.MonsterType;
         monsterPools[type].ReturnObject(mon);
-
         monsterCount--;
     }
 
