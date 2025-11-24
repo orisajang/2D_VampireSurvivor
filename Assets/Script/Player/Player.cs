@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [RequireComponent(typeof(ScanTarget))]
@@ -26,14 +27,17 @@ public class Player : Unit
     {
         _scanTarget = GetComponent<ScanTarget>();
     }
+    
     private void Start()
     {
         _playerState = new PlayerIdleState(this);
+        
     }
     private void OnEnable()
     {
         PlayerAttackWithWeapon();
         StartWeaponAttack();
+        PlayerManager.Instance.SetPlayer(this);
     }
     private void OnDisable()
     {
