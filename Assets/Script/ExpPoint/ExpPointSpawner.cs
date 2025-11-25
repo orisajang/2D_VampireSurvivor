@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,6 +9,7 @@ public class ExpPointSpawner : Singleton<ExpPointSpawner>
     [SerializeField] ExpPointScript _expPointPrefab;
     [SerializeField] int poolSize = 10;
     ObjPool<ExpPointScript> _expPointPool;
+    public event Action<int> _getExpPoint;
 
     protected override void Awake()
     {
@@ -26,5 +28,7 @@ public class ExpPointSpawner : Singleton<ExpPointSpawner>
     {
         expPoint._destroyExpPoint -= DisableExpPoint;
         _expPointPool.ReturnObject(expPoint);
+        //경험치를 주웠을때 
+        _getExpPoint?.Invoke(10);
     }
 }

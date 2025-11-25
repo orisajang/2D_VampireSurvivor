@@ -1,0 +1,29 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class GamePresent
+{
+    GameModel _gameModel;
+    IGameInterface _gameInterface;
+
+    public GamePresent(IGameInterface game)
+    {
+        _gameModel = GameManager.Instance.GameModel;
+        _gameInterface = game;
+
+        GameManager.Instance.timeChanged += TimeSet;
+    }
+
+    public void TimeSet(int time)
+    {
+        _gameModel.SetTime(time);
+        _gameInterface.UpdateGameTime(_gameModel.CurrentTime);
+    }
+
+    public void Dispose()
+    {
+        GameManager.Instance.timeChanged -= TimeSet;
+    }
+
+}
