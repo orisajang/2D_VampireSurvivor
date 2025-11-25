@@ -6903,18 +6903,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 504026191011805440, guid: 4edc473449d3f7c4ea62457c83d91c0b, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 667088059017427332, guid: 4edc473449d3f7c4ea62457c83d91c0b, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 667088059017427332, guid: 4edc473449d3f7c4ea62457c83d91c0b, type: 3}
-      propertyPath: _layer.m_Bits
-      value: 64
-      objectReference: {fileID: 0}
     - target: {fileID: 1706755811640222265, guid: 4edc473449d3f7c4ea62457c83d91c0b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -6955,45 +6943,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7330923064232187295, guid: 4edc473449d3f7c4ea62457c83d91c0b, type: 3}
-      propertyPath: _moveSpeed
-      value: 10
-      objectReference: {fileID: 0}
     - target: {fileID: 7460739469218924793, guid: 4edc473449d3f7c4ea62457c83d91c0b, type: 3}
       propertyPath: m_Name
       value: PlayerPrefab
       objectReference: {fileID: 0}
-    - target: {fileID: 7460739469218924793, guid: 4edc473449d3f7c4ea62457c83d91c0b, type: 3}
-      propertyPath: m_TagString
-      value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 7862778130800922858, guid: 4edc473449d3f7c4ea62457c83d91c0b, type: 3}
-      propertyPath: isTakeDamage
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7862778130800922858, guid: 4edc473449d3f7c4ea62457c83d91c0b, type: 3}
-      propertyPath: _weaponsData.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7862778130800922858, guid: 4edc473449d3f7c4ea62457c83d91c0b, type: 3}
-      propertyPath: _weaponsData.Array.data[0]
-      value: 
-      objectReference: {fileID: 11400000, guid: b98bad6911d5f674ab893dd323bf6c3e, type: 2}
-    - target: {fileID: 7862778130800922858, guid: 4edc473449d3f7c4ea62457c83d91c0b, type: 3}
-      propertyPath: _weaponsData.Array.data[1]
-      value: 
-      objectReference: {fileID: 11400000, guid: 42bf4843427c19e41a832fd380a0963c, type: 2}
-    - target: {fileID: 8545508137577119976, guid: 4edc473449d3f7c4ea62457c83d91c0b, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 7460739469218924793, guid: 4edc473449d3f7c4ea62457c83d91c0b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1161957100}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4edc473449d3f7c4ea62457c83d91c0b, type: 3}
 --- !u!1 &572627095
 GameObject:
@@ -7191,46 +7148,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1115026438}
   m_CullTransparentMesh: 1
---- !u!1 &1161957095 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7460739469218924793, guid: 4edc473449d3f7c4ea62457c83d91c0b, type: 3}
-  m_PrefabInstance: {fileID: 567747967}
-  m_PrefabAsset: {fileID: 0}
---- !u!70 &1161957100
-CapsuleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1161957095}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: -0.49474347, y: 1.0389092}
-  m_Size: {x: 1.4894869, y: 4.111611}
-  m_Direction: 0
 --- !u!1 &1199330000
 GameObject:
   m_ObjectHideFlags: 0

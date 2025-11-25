@@ -1,7 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(ScanTarget))]
 public class Player : Unit
@@ -23,9 +24,16 @@ public class Player : Unit
     //몬스터한테 데미지받았을떄 (삭제예정)
     public bool isTakeDamage = false;
 
+    //플레이어 HP 
+    [SerializeField] Image _hpBarImage;
+    public float _CurrentHp { get; private set; }
+
     private void Awake()
     {
         _scanTarget = GetComponent<ScanTarget>();
+        _hp = 10;//원래는 _hp값을 입력해야되는데 잠시 ㄱㄷ
+        _CurrentHp = _hp; //원래는 _hp값을 입력해야되는데 잠시 ㄱㄷ
+        
     }
     
     private void Start()
@@ -100,11 +108,22 @@ public class Player : Unit
             }
             yield return _delay;
         }
-
-        
     }
 
-    
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(collision.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+        {
+            isTakeDamage = true;
+            Monster mon = collision.gameObject.GetComponent<Monster>();
+
+            _CurrentHp = BattleManager.Instance.CalculateDamage(_CurrentHp, mon.AttackValue, _defense);
+            _hpBarImage.fillAmount = _CurrentHp / _hp;
+        }
+    }
+
+
+
 
     protected override void Attack()
     {

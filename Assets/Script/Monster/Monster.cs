@@ -10,6 +10,8 @@ public class Monster : Unit
     public eMonsterType MonsterType { get; private set; }
     private int _reward;
     public int Reward => _reward;
+    public float AttackValue => _attack;
+    public float DefenseValue => _defense;
 
     //스크립터블 오브젝트에서 몬스터정보를 설정
     public void Init(MonsterSO monsterSO)
