@@ -31,8 +31,8 @@ public class Player : Unit
     private void Awake()
     {
         _scanTarget = GetComponent<ScanTarget>();
-        _hp = 10;//원래는 _hp값을 입력해야되는데 잠시 ㄱㄷ
-        _CurrentHp = _hp; //원래는 _hp값을 입력해야되는데 잠시 ㄱㄷ
+        //_hp = 10;//원래는 _hp값을 입력해야되는데 잠시 ㄱㄷ
+       // _CurrentHp = _hp; //원래는 _hp값을 입력해야되는데 잠시 ㄱㄷ
         
     }
     
@@ -122,7 +122,13 @@ public class Player : Unit
         }
     }
 
+    public void SetPlayerData(PlayerDataSO playerData)
+    {
+        _hp = playerData.hp;
+        _defense = playerData.defense;
 
+        _CurrentHp = _hp;
+    }
 
 
     protected override void Attack()

@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private float _moveSpeed = 3.0f;
+    private float _moveSpeed = 3.0f;
     InputAction action;
     Vector2 moveDir;
 
@@ -16,6 +16,10 @@ public class PlayerController : MonoBehaviour
 
         action.performed += PlayerMove;
         action.canceled += (ctx) => moveDir = Vector2.zero;
+    }
+    public void SetMoveSpeed(PlayerDataSO playerData)
+    {
+        _moveSpeed = playerData.moveSpeed;
     }
     private void PlayerMove(InputAction.CallbackContext ctx)
     {
