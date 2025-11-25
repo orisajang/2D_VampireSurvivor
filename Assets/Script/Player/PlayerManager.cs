@@ -9,12 +9,21 @@ public class PlayerManager : Singleton<PlayerManager>
     private Player _player;
     [SerializeField] private PlayerDataSO playerData;
     public Player _Player => _player;
-    public PlayerModel Model { get; private set; }
+    //플레이어 모델 필요할때만 생성
+    private PlayerModel _playerModel;
+    public PlayerModel _PlayerModel 
+    {
+        get
+        {
+            if (_playerModel == null) _playerModel = new PlayerModel();
+            return _playerModel;
+        }
+    }
     protected override void Awake()
     {
         base.Awake();
         //모델 생성 (UI에서 MVP형식으로 사용할)
-        Model = new PlayerModel();
+        //Model = new PlayerModel();
         //플레이어 생성
         GameObject obj = Instantiate(playerData.playerPrefab, transform.position, Quaternion.identity, null);
         PlayerController playerController = obj.GetComponent<PlayerController>();

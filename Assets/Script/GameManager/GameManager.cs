@@ -14,14 +14,22 @@ public class GameManager : Singleton<GameManager>
     WaitForSeconds _delay;
 
     //게임 모델
-    public GameModel GameModel { get; private set; }
+    private GameModel _gameModel;
+    public GameModel _GameModel 
+    { 
+        get
+        {
+            if (_gameModel == null) _gameModel = new GameModel();
+            return _gameModel;
+        }
+    }
 
     protected override void Awake()
     {
         base.Awake();
         //무조건 1초마다 진행할 코루틴을 위해
         _delay = new WaitForSeconds(1.0f);
-        GameModel = new GameModel();
+        //GameModel = new GameModel();
     }
     private void OnEnable()
     {

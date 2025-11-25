@@ -13,9 +13,9 @@ public class MonsterManager : Singleton<MonsterManager>
     //소환이 끝났는지
     bool isSpawnFinished = false;
     //앞으로 소환될 몬스터 개수
-    int currentMonsterSpawnCount = 0;
+    int remainMonsterDecreaseCount = 0;
     //스테이지에 남은 몬스터 개수
-    int reaminMonstrCount = 0;
+    int remainMonstrCount = 0;
 
     //소환 지점 정보
     [SerializeField] Transform spawnPointInfo;
@@ -30,17 +30,15 @@ public class MonsterManager : Singleton<MonsterManager>
     WaitForSeconds _spawnDelay;
 
     //몬스터 사망 이벤트
-    public Action<int> monsterDead;
+    //public delegate void MonsterDeadDeleagte(int reward, int remainMonster);
+    //public event MonsterDeadDeleagte monsterDead; //몬스터 사망하면 금액 반환
+    public event Action<int> OnGoldEarned;
+    public event Action<int> OnChangedRemainMonster;
 
     //스테이지매니저에서 넘어오는 소환될 몬스터 enum리스트
     List<eMonsterType> spawnMonsterInfo = new List<eMonsterType>();
     [SerializeField] int spawnTime = 2;
 
-    //스테이지 매니저에서 몬스터 소환 리스트를 받음
-    public void SetMonsterInfo(List<eMonsterType> type)
-    {
-        spawnMonsterInfo = new List<eMonsterType>(type);
-    }
 
     protected override void Awake()
     {
@@ -56,6 +54,12 @@ public class MonsterManager : Singleton<MonsterManager>
         //몬스터 소환지점 설정
         SetSpawnPoint();
         _spawnDelay = new WaitForSeconds(spawnTime);
+    }
+    //스테이지 매니저에서 몬스터 소환 리스트를 받음
+    public void SetMonsterInfo(List<eMonsterType> type)
+    {
+        spawnMonsterInfo = new List<eMonsterType>(type);
+        remainMonsterDecreaseCount = type.Count;
     }
     //스테이지 매니저에서 시작 명령을 내리면 몬스터 소환 시작
     public void StartSummonMonsters()
@@ -90,30 +94,39 @@ public class MonsterManager : Singleton<MonsterManager>
         monsterBuf.Init(monsterInfo);
 
         //소환된 몬스터 개수 count
-        currentMonsterSpawnCount++;
-        reaminMonstrCount++;
+        remainMonstrCount++;
     }
 
     public void DeSpawnMonster(Monster mon)
     {
+        //카운트 차감
+        remainMonstrCount--;
+        remainMonsterDecreaseCount--;
         //경험치 구슬 생성
         ExpPointSpawner.Instance.CreateExpPoint(mon.transform);
         //몬스터 사망 이벤트 Invoke
-        monsterDead?.Invoke(mon.Reward);
+        NotifyMonsterDead(mon.Reward, remainMonsterDecreaseCount);
         //몬스터 풀에 반환
         mon.deathEvent -= DeSpawnMonster;
         eMonsterType type = mon.MonsterType;
         monsterPools[type].ReturnObject(mon);
-        reaminMonstrCount--;
+        
 
         //다음스테이지로 넘어가는 조건을 만족하는지 체크
         //소환해야할 몬스터가 더이상없고, 스테이지에 남은 몬스터가 없다면
-        if(isSpawnFinished && reaminMonstrCount == 0)
+        if (isSpawnFinished && remainMonstrCount == 0)
         {
             //다음스테이지에서 사용할 수 있게 관련 필드 초기화
             InitForNextStage();
             StageManager.Instance.GoToNextStage();
         }
+    }
+
+    //몬스터 사망시 발동해야하는 이벤드들 메서드로 관리할수있게 묶음
+    public void NotifyMonsterDead(int reward, int remainMonster)
+    {
+        OnGoldEarned?.Invoke(reward);
+        OnChangedRemainMonster?.Invoke(remainMonster);
     }
 
     private void InitForNextStage()
@@ -123,8 +136,8 @@ public class MonsterManager : Singleton<MonsterManager>
             StopCoroutine(spawnCoroutine);
             spawnCoroutine = null;
         }
-        currentMonsterSpawnCount = 0;
-        reaminMonstrCount = 0;
+        remainMonsterDecreaseCount = 0;
+        remainMonstrCount = 0;
         isSpawnFinished = false;
         spawnMonsterInfo = new List<eMonsterType>();
     }

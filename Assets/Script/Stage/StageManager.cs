@@ -1,14 +1,30 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class StageManager : Singleton<StageManager>
 {
+    //스테이지 정보 (스크립터블오브젝트에서 가져옴)
     [SerializeField] private List<StageDataSO> _stageDataList;
-    private int currentStageNum = 0;
+    //현재 스테이지 번호
+    public int _currentStageNum { get; private set; } = 0;
+    //MVP패턴으로 Presenter와 연결하기위한 model을 정의
+    private StageModel _stageModel;
+    //프러퍼티로 _stageModel이 필요할때 new 해줘서 클래스간 Awake순서 상관없이 미리 정의할 수 있도록 처리
+    public StageModel _StageModel { 
+        get
+        {
+            if (_stageModel == null) _stageModel = new StageModel();
+            return _stageModel;
+        }
+    }
+    //초기 스테이지 정보 넘겨줌
+    public event Action<int> _readStageFirstInfo;
     protected override void Awake()
     {
         base.Awake();
+        //_stageModel = new StageModel();
     }
     private void Start()
     {
@@ -19,18 +35,22 @@ public class StageManager : Singleton<StageManager>
     //현재 스테이지 정보를 보낸다.
     public void SendStageMonsterInfo()
     {
-        MonsterManager.Instance.SetMonsterInfo(_stageDataList[currentStageNum].monsterInfoList);
+        MonsterManager.Instance.SetMonsterInfo(_stageDataList[_currentStageNum].monsterInfoList);
     }
     //스테이지 시작 명령
     public void SendStageStart()
     {
-        Debug.Log("현재 스테이지는 " + currentStageNum);
+        Debug.Log("현재 스테이지는 " + _currentStageNum);
         MonsterManager.Instance.StartSummonMonsters();
+
+        //스테이지 시작할때마다 초기 정보 넣어줌
+        int monsterRemainCount = _stageDataList[_currentStageNum].monsterInfoList.Count;
+        _readStageFirstInfo?.Invoke(monsterRemainCount);
     }
     public void GoToNextStage()
     {
-        currentStageNum++;
-        if(currentStageNum < _stageDataList.Count)
+        _currentStageNum++;
+        if(_currentStageNum < _stageDataList.Count)
         {
             SendStageMonsterInfo();
             SendStageStart();

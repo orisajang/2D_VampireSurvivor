@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44fc963f43c80d24893cae9e98b9bede, type: 3}
   m_Name: StageMonsterData2
   m_EditorClassIdentifier: 
-  stageNumber: 0
-  monsterInfoList: 
+  stageNumber: 1
+  monsterInfoList: 0100000001000000000000000100000001000000000000000100000001000000

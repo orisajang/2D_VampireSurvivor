@@ -9,7 +9,7 @@ public class GamePresent
 
     public GamePresent(IGameInterface game)
     {
-        _gameModel = GameManager.Instance.GameModel;
+        _gameModel = GameManager.Instance._GameModel;
         _gameInterface = game;
 
         GameManager.Instance.timeChanged += TimeSet;

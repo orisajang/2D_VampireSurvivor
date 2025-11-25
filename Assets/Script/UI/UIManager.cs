@@ -3,30 +3,33 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class UIManager : Singleton<UIManager>, IPlayerMVPView,IGameInterface
+public class UIManager : Singleton<UIManager>, IPlayerMVPView,IGameInterface, IStageMVPView
 {
-    [SerializeField] TextMeshProUGUI _goldText;
-    [SerializeField] TextMeshProUGUI _playTimeText;
-    [SerializeField] TextMeshProUGUI _expPointText;
-    [SerializeField] TextMeshProUGUI _levelText;
+    [SerializeField] TextMeshProUGUI _goldText; //금액
+    [SerializeField] TextMeshProUGUI _playTimeText; //플레이시간
+    [SerializeField] TextMeshProUGUI _expPointText; //경험치
+    [SerializeField] TextMeshProUGUI _levelText; //레벨
+
+    [SerializeField] TextMeshProUGUI _remainMonsterText; //남은 몬스터와 스테이지 정보
+
 
     private PlayerMVPPresenter _playerPresenter;
     private GamePresent _gamePresent;
+    private StagePresenter _stagePresent;
     
     protected override void Awake()
     {
         base.Awake();
-    }
-    private void Start()
-    {
         _goldText.text = "Gold!!";
         _playerPresenter = new PlayerMVPPresenter(this);
         _gamePresent = new GamePresent(this);
+        _stagePresent = new StagePresenter(this);
     }
     private void OnDisable()
     {
         _playerPresenter.Dispose();
         _gamePresent.Dispose();
+        _stagePresent.Dispose();
     }
 
     public void UpdateGoldValue(int goldValue)
@@ -65,5 +68,10 @@ public class UIManager : Singleton<UIManager>, IPlayerMVPView,IGameInterface
     {
         _expPointText.text = expValue.ToString();
         _levelText.text = level.ToString();
+    }
+
+    public void SetRemainMonsterView(int remainMonster, int stageNum)
+    {
+        _remainMonsterText.text = $"StageNum: {stageNum} remain Monset: {remainMonster} ";
     }
 }
