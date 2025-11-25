@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-[CreateAssetMenu(menuName = "Player/Player Data", fileName = "PlayerData")]
+[CreateAssetMenu(menuName = "ScriptableMenuSO/Player Data", fileName = "PlayerData")]
 public class PlayerDataSO : ScriptableObject
 {
     public float hp;

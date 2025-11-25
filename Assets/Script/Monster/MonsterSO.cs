@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "MonsterSO/Monster Data", fileName = "MonsterSOData")]
+[CreateAssetMenu(menuName = "ScriptableMenuSO/Monster Data", fileName = "MonsterSOData")]
 public class MonsterSO : ScriptableObject
 {
     public float hp;

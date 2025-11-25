@@ -10,7 +10,12 @@ public class MonsterManager : Singleton<MonsterManager>
 
     //몬스터 정보(스크립터블 오브젝트)
     [SerializeField] List<MonsterSO> monsterDatas = new List<MonsterSO>();
-    int monsterCount = 0;
+    //소환이 끝났는지
+    bool isSpawnFinished = false;
+    //앞으로 소환될 몬스터 개수
+    int currentMonsterSpawnCount = 0;
+    //스테이지에 남은 몬스터 개수
+    int reaminMonstrCount = 0;
 
     //소환 지점 정보
     [SerializeField] Transform spawnPointInfo;
@@ -27,18 +32,14 @@ public class MonsterManager : Singleton<MonsterManager>
     //몬스터 사망 이벤트
     public Action<int> monsterDead;
 
-    //삭제예정. 테스트용. 스테이지매니저에서 넘어오는 소환될 몬스터 enum리스트
+    //스테이지매니저에서 넘어오는 소환될 몬스터 enum리스트
     List<eMonsterType> spawnMonsterInfo = new List<eMonsterType>();
-    int spawnTime = 2;
+    [SerializeField] int spawnTime = 2;
 
-    //삭제예정. 테스트용.
-    public void SetMonsterInfo()
+    //스테이지 매니저에서 몬스터 소환 리스트를 받음
+    public void SetMonsterInfo(List<eMonsterType> type)
     {
-        spawnMonsterInfo.Add(eMonsterType.Rat);
-        spawnMonsterInfo.Add(eMonsterType.Rat);
-        spawnMonsterInfo.Add(eMonsterType.Rat);
-        spawnMonsterInfo.Add(eMonsterType.Ghost);
-        spawnMonsterInfo.Add(eMonsterType.Ghost);
+        spawnMonsterInfo = new List<eMonsterType>(type);
     }
 
     protected override void Awake()
@@ -55,13 +56,11 @@ public class MonsterManager : Singleton<MonsterManager>
         //몬스터 소환지점 설정
         SetSpawnPoint();
         _spawnDelay = new WaitForSeconds(spawnTime);
-
-        SetMonsterInfo(); //테스트용. 삭제예정
     }
-
-    private void Start()
+    //스테이지 매니저에서 시작 명령을 내리면 몬스터 소환 시작
+    public void StartSummonMonsters()
     {
-        if(spawnCoroutine == null)
+        if (spawnCoroutine == null)
         {
             spawnCoroutine = StartCoroutine(SpawnMonsterRoutine(spawnMonsterInfo));
         }
@@ -78,24 +77,21 @@ public class MonsterManager : Singleton<MonsterManager>
     //몬스터 생성 (오브젝트풀에서 하나씩 꺼냄)
     public void SpawnMonster(eMonsterType type)
     {
-        //foreach(eMonsterType type in monsterInfos)
-        {
-            //몬스터 초기 설정
-            Monster monsterBuf =  monsterPools[type].GetObject();
-            monsterBuf.deathEvent += DeSpawnMonster;
+        //몬스터 초기 설정
+        Monster monsterBuf = monsterPools[type].GetObject();
+        monsterBuf.deathEvent += DeSpawnMonster;
 
-            //몬스터 소환 위치 지정
-            int selectPoint = UnityEngine.Random.Range(0, spawnPoints.Count);
-            monsterBuf.transform.position = spawnPoints[selectPoint].position;
+        //몬스터 소환 위치 지정
+        int selectPoint = UnityEngine.Random.Range(0, spawnPoints.Count);
+        monsterBuf.transform.position = spawnPoints[selectPoint].position;
 
-            //스크립터블 오브젝트에서 몬스터능력치 정보를 Set 해준다
-            MonsterSO monsterInfo = monsterDatas.Find(x => x.monsterType == type);
-            monsterBuf.Init(monsterInfo);
+        //스크립터블 오브젝트에서 몬스터능력치 정보를 Set 해준다
+        MonsterSO monsterInfo = monsterDatas.Find(x => x.monsterType == type);
+        monsterBuf.Init(monsterInfo);
 
-
-            monsterCount++;
-
-        }
+        //소환된 몬스터 개수 count
+        currentMonsterSpawnCount++;
+        reaminMonstrCount++;
     }
 
     public void DeSpawnMonster(Monster mon)
@@ -108,9 +104,29 @@ public class MonsterManager : Singleton<MonsterManager>
         mon.deathEvent -= DeSpawnMonster;
         eMonsterType type = mon.MonsterType;
         monsterPools[type].ReturnObject(mon);
-        monsterCount--;
+        reaminMonstrCount--;
 
-        
+        //다음스테이지로 넘어가는 조건을 만족하는지 체크
+        //소환해야할 몬스터가 더이상없고, 스테이지에 남은 몬스터가 없다면
+        if(isSpawnFinished && reaminMonstrCount == 0)
+        {
+            //다음스테이지에서 사용할 수 있게 관련 필드 초기화
+            InitForNextStage();
+            StageManager.Instance.GoToNextStage();
+        }
+    }
+
+    private void InitForNextStage()
+    {
+        if(spawnCoroutine != null)
+        {
+            StopCoroutine(spawnCoroutine);
+            spawnCoroutine = null;
+        }
+        currentMonsterSpawnCount = 0;
+        reaminMonstrCount = 0;
+        isSpawnFinished = false;
+        spawnMonsterInfo = new List<eMonsterType>();
     }
 
     //코루틴으로 생성
@@ -121,7 +137,7 @@ public class MonsterManager : Singleton<MonsterManager>
             SpawnMonster(item);
             yield return _spawnDelay;
         }
-
+        isSpawnFinished = true;
     }
 
 
