@@ -6,6 +6,8 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] Animator animator;
+    [SerializeField] Transform playerCharacterPrefab;
+    [field: SerializeField] public Transform playerShiedSpawnPoint { get; private set; }
     private float _moveSpeed = 3.0f;
     InputAction action;
     Vector2 moveDir;
@@ -37,13 +39,13 @@ public class PlayerController : MonoBehaviour
             if(moveVector3.x > 0)
             {
                 //transform.localScale = new Vector3(1, 1, 1);
-                transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+                playerCharacterPrefab.transform.localScale = new Vector3(Mathf.Abs(playerCharacterPrefab.transform.localScale.x), playerCharacterPrefab.transform.localScale.y, playerCharacterPrefab.transform.localScale.z);
             }
             else if(moveVector3.x < 0)
             {
                 //transform.localScale = new Vector3(-1, 1, 1);
-                
-                transform.localScale = new Vector3(-Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+
+                playerCharacterPrefab.transform.localScale = new Vector3(-Mathf.Abs(playerCharacterPrefab.transform.localScale.x), playerCharacterPrefab.transform.localScale.y, playerCharacterPrefab.transform.localScale.z);
             }
 
         }

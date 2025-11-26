@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class ObjPool<T> where T : MonoBehaviour
 {
-    //¸ó½ºÅÍ, Àû, ÃÑ¾Ë, ÆÄÆ¼Å¬ µî
+    //ëª¬ìŠ¤í„°, ì , ì´ì•Œ, íŒŒí‹°í´ ë“±
     Queue<T> pool;
     private T prefab; 
-    Transform poolParent;   //ÇÏÀ§°´Ã¼¿¡ ³Ö¾î¼­ °ü¸®ÇÒ¶§ »ç¿ë
+    Transform poolParent;   //í•˜ìœ„ê°ì²´ì— ë„£ì–´ì„œ ê´€ë¦¬í• ë•Œ ì‚¬ìš©
     public ObjPool(T prefab, int initSize, Transform parentPos = null)
     {
         this.prefab = prefab;
@@ -16,7 +16,7 @@ public class ObjPool<T> where T : MonoBehaviour
 
         for (int i = 0; i < initSize; i++)
         {
-            //ObjPoolÀº MonoBehavior¸¦ »ó¼Ó¹ŞÁö ¾Ê±â¶§¹®¿¡ Object.À» ºÙ¿©¾ßÇÔ, WhereÀº Á¦¾àÁ¶°ÇÀÌÁö »ó¼ÓÀ»¹ŞÁö´Â¾Ê¾Ò´Ù
+            //ObjPoolì€ MonoBehaviorë¥¼ ìƒì†ë°›ì§€ ì•Šê¸°ë•Œë¬¸ì— Object.ì„ ë¶™ì—¬ì•¼í•¨, Whereì€ ì œì•½ì¡°ê±´ì´ì§€ ìƒì†ì„ë°›ì§€ëŠ”ì•Šì•˜ë‹¤
             T instance;
             if (poolParent == null)
             {
@@ -39,7 +39,7 @@ public class ObjPool<T> where T : MonoBehaviour
             obj.gameObject.SetActive(true);
             return obj;
         }
-        //Ç®ÀÌ ¸ğµÎ »ç¿ëÁßÀÌ¶ó¸é Ç®À» ´Ã¸²
+        //í’€ì´ ëª¨ë‘ ì‚¬ìš©ì¤‘ì´ë¼ë©´ í’€ì„ ëŠ˜ë¦¼
         T newObj;
         if (poolParent == null)
         {

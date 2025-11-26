@@ -14,10 +14,11 @@ public class Bullet : MonoBehaviour, IWeaponInfo
     
     //총알의 공격력
     //float _damage;
-    //private 필드들 외부에서 Set해주기 위한 메서드
-    public void SetBulletMoveDirection(Transform dir)
+    //총알을 쏘는 방향, 발사할 위치를 지정해주기 위해
+    public void SetBulletMoveDirection(Transform dir, Vector3 shootPosition)
     {
         _moveDir = dir;
+        transform.position = shootPosition;
     }
     public void SetWeaponInit(float dmg,float speed)
     {

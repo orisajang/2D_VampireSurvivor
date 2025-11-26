@@ -22,7 +22,9 @@ public class Weapon
     public eWeaponType WeaponType => _weaponType;
     List<RotateShield> rotateShieldList = new List<RotateShield>();
 
-    public Weapon(GameObject prefab, Transform position , eWeaponType type, int dmg, int cd, float speed)
+    ObjPool<Bullet> objPoolBullet;
+
+    public Weapon(GameObject prefab, Transform position , eWeaponType type, int dmg, int cd, float speed,Transform parent = null)
     {
         _prefab = prefab;
         _firePosition = position;
@@ -35,6 +37,17 @@ public class Weapon
         currentCoolDown = _coolDown;
         _weaponDamage = _baseWeaponDamage;
         _weaponSpeed = _baseWeaponSpeed;
+
+        //오브젝트풀 생성
+        //오브젝트풀을 타입별로 만들자 (현재는 총알공격만 오브젝트풀로), 쉴드공격은 캐릭터 주의를 회전해야하므로 풀로하면 이상해짐
+        switch (type)
+        {
+            case eWeaponType.ShootBullet:
+                Bullet bullet = _prefab.GetComponent<Bullet>();
+                objPoolBullet = new ObjPool<Bullet>(bullet,10, parent);
+                break;
+        }
+        
     }
 
     //Player에서 1초마다 시간체크하고 0초되면 발사 동작 진행
@@ -68,17 +81,17 @@ public class Weapon
     {
         //총알 발사
         Debug.Log("발사공격");
-        GameObject obj = GameObject.Instantiate(_prefab, _firePosition.position, _firePosition.rotation, null);
-        Bullet bullet = obj.GetComponent<Bullet>();
-        bullet.SetBulletMoveDirection(shotDir);
+        //GameObject obj = GameObject.Instantiate(_prefab, _firePosition.position, _firePosition.rotation, null);
+        Bullet bullet = objPoolBullet.GetObject();
+        bullet.SetBulletMoveDirection(shotDir, PlayerManager.Instance._Player.transform.position);
         bullet.SetWeaponInit(_weaponDamage,_weaponSpeed);
     }
     private void ShootRotateShield(Transform plyDir)
     {
         Debug.Log("방패공격");
         Vector2 vec = new Vector2(plyDir.position.x, plyDir.position.y + 3);
-        GameObject obj = GameObject.Instantiate(_prefab, vec, plyDir.rotation, plyDir);
-        RotateShield rotateShield = obj.GetComponent<RotateShield>();
+        GameObject obj = GameObject.Instantiate(_prefab, vec, plyDir.rotation, PlayerManager.Instance._PlayerController.playerShiedSpawnPoint);
+        RotateShield rotateShield = obj.transform.GetComponent<RotateShield>();
         rotateShield.SetRotatePoint(plyDir);
         rotateShield.SetWeaponInit(_weaponDamage,_weaponSpeed);
         rotateShieldList.Add(rotateShield);

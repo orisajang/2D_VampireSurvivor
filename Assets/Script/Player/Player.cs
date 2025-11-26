@@ -87,7 +87,8 @@ public class Player : Unit
         foreach (var item in _weaponsData)
         {
             eWeaponType type = item.weaponType;
-            Weapon weapon = new Weapon(item.weaponPrefab,transform, type, item.weaponDamage, item.coolDown, item.weaponSpeed);
+            Transform weaponSpawnPos = PlayerManager.Instance.playerWeaponSpawner;
+            Weapon weapon = new Weapon(item.weaponPrefab,transform, type, item.weaponDamage, item.coolDown, item.weaponSpeed, weaponSpawnPos);
             AddWeapon(weapon);
         }
     }

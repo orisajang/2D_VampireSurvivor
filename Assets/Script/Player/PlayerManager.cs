@@ -8,7 +8,10 @@ public class PlayerManager : Singleton<PlayerManager>
     //[SerializeField] private Player _player;
     private Player _player;
     [SerializeField] private PlayerDataSO playerData;
+    //플레이어 무기 오브젝트풀 부모 위치 설정
+    [field: SerializeField] public Transform playerWeaponSpawner { get; private set; }
     public Player _Player => _player;
+    public PlayerController _PlayerController { get; private set; }
     //플레이어 모델 필요할때만 생성
     private PlayerModel _playerModel = new PlayerModel();
     public PlayerModel _PlayerModel 
@@ -33,7 +36,7 @@ public class PlayerManager : Singleton<PlayerManager>
         //Model = new PlayerModel();
         //플레이어 생성
         GameObject obj = Instantiate(playerData.playerPrefab, transform.position, Quaternion.identity, null);
-        PlayerController playerController = obj.GetComponent<PlayerController>();
+        _PlayerController = obj.GetComponent<PlayerController>();
         _player = obj.GetComponent<Player>();
 
         //플레이어 불러와야함 뭐였지 
