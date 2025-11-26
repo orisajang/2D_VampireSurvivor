@@ -4,25 +4,27 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour, IWeaponInfo
 {
-    [SerializeField] float _bulletSpeed = 2.0f;
+    //[SerializeField] float _bulletSpeed = 2.0f;
     [SerializeField] Transform _moveDir;
     Rigidbody2D _rigidbody;
 
-    //¹«±âÀÇ °ø°İ·Â
+    //ë¬´ê¸°ì˜ ê³µê²©ë ¥
     public float Damage { get; private set; }
+    public float Speed { get; private set; }
     
-    //ÃÑ¾ËÀÇ °ø°İ·Â
-    float _damage;
-    //private ÇÊµåµé ¿ÜºÎ¿¡¼­ SetÇØÁÖ±â À§ÇÑ ¸Ş¼­µå
+    //ì´ì•Œì˜ ê³µê²©ë ¥
+    //float _damage;
+    //private í•„ë“œë“¤ ì™¸ë¶€ì—ì„œ Setí•´ì£¼ê¸° ìœ„í•œ ë©”ì„œë“œ
     public void SetBulletMoveDirection(Transform dir)
     {
         _moveDir = dir;
     }
-    public void SetWeaponDamage(float dmg)
+    public void SetWeaponInit(float dmg,float speed)
     {
         Damage = dmg;
+        Speed = speed;
     }
-    //¾Æ·¡ºÎÅÍ ÁÖ¿ä ·ÎÁ÷ ½ÇÇà
+    //ì•„ë˜ë¶€í„° ì£¼ìš” ë¡œì§ ì‹¤í–‰
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
@@ -32,19 +34,12 @@ public class Bullet : MonoBehaviour, IWeaponInfo
     {
         if (_moveDir != null)
         {
-            Vector2 bulletDir = ((_moveDir.position - transform.position) * _bulletSpeed * Time.fixedDeltaTime).normalized;
+            Vector2 bulletDir = ((_moveDir.position - transform.position) * Time.fixedDeltaTime).normalized;
+            bulletDir *= Speed;
             _rigidbody.AddForce(bulletDir, ForceMode2D.Impulse);
         }
     }
 
-    private void FixedUpdate()
-    {
-        if (_moveDir != null)
-        {
-            //Vector2 bulletDir = ((_moveDir.position - transform.position) * _bulletSpeed * Time.fixedDeltaTime).normalized;
-           // _rigidbody.AddForce(bulletDir, ForceMode2D.Impulse);
-        }
-       
-    }
+
 
 }

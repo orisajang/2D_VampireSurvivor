@@ -1,11 +1,11 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayUIManager : Singleton<PlayUIManager>, IPlayerMVPView,IGameInterface, IStageMVPView
+public class PlayUIManager : Singleton<PlayUIManager>, IPlayerMVPView, IGameInterface, IStageMVPView
 {
     //PlayGroundScene에서 사용할 UI요소들
     [SerializeField] TextMeshProUGUI _goldText; //금액
@@ -13,12 +13,15 @@ public class PlayUIManager : Singleton<PlayUIManager>, IPlayerMVPView,IGameInter
     [SerializeField] TextMeshProUGUI _expPointText; //경험치
     [SerializeField] TextMeshProUGUI _levelText; //레벨
     [SerializeField] TextMeshProUGUI _remainMonsterText; //남은 몬스터와 스테이지 정보
+    [SerializeField] Button _bulletUpgradeBtn; //총알 업그레이드 버튼
+    [SerializeField] Button _rotateShieldBtn; //회전방패 업그레이드 버튼
 
 
     private PlayerMVPPresenter _playerPresenter;
     private GamePresent _gamePresent;
     private StagePresenter _stagePresent;
-    
+    private WeaponMVPPresenter weaponMVPPresenter;
+
     protected override void Awake()
     {
         isDestroyOnLoad = false;
@@ -28,7 +31,22 @@ public class PlayUIManager : Singleton<PlayUIManager>, IPlayerMVPView,IGameInter
         _playerPresenter = new PlayerMVPPresenter(this);
         _gamePresent = new GamePresent(this);
         _stagePresent = new StagePresenter(this);
-        
+        weaponMVPPresenter = new WeaponMVPPresenter(PlayerManager.Instance._Player.weaponModel);
+
+        //버튼클릭 이벤트
+        _bulletUpgradeBtn.onClick.AddListener(OnBulletUpgradeButtonClick);
+        _rotateShieldBtn.onClick.AddListener(OnRotateShieldUpgradeButtonClick);
+    }
+
+
+    //버튼클릭되면
+    public void OnBulletUpgradeButtonClick()
+    {
+        weaponMVPPresenter.OnClickBulletUpMethod();
+    }
+    public void OnRotateShieldUpgradeButtonClick()
+    {
+        weaponMVPPresenter.OnClickRotateShieldMethod();
     }
 
     private void OnDisable()

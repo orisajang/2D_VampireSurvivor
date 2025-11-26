@@ -6,23 +6,25 @@ public class RotateShield : MonoBehaviour, IWeaponInfo
 {
 
     [SerializeField] Transform rotatePoint;
-    [SerializeField] float rotateSpeed = 10.0f;
+    //[SerializeField] float rotateSpeed = 10.0f;
 
-    //π´±‚¿« ∞¯∞›∑¬
+    //Î¨¥Í∏∞Ïùò Í≥µÍ≤©Î†•
     public float Damage { get; private set; }
+    public float Speed { get; private set; }
     public void SetRotatePoint(Transform trf)
     {
         rotatePoint = trf;
     }
-    public void SetWeaponDamage(float dmg)
+    public void SetWeaponInit(float dmg, float speed)
     {
         Damage = dmg;
+        Speed = speed;
     }
     private void FixedUpdate()
     {
         if(rotatePoint != null)
         {
-            transform.RotateAround(rotatePoint.position, Vector3.forward, rotateSpeed * Time.fixedDeltaTime);
+            transform.RotateAround(rotatePoint.position, Vector3.forward, Speed * Time.fixedDeltaTime);
         }
     }
 }

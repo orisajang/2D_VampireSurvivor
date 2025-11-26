@@ -15,7 +15,7 @@ public class PlayerModel
     public void AddExpPoint(int amount)
     {
         ExpPoint += amount;
-        //·¹º§¾÷À» À§ÇØ ·¹º§ÀÌ ¾ó¸¶³ª ¿Ã¶ú´ÂÁö, °æÇèÄ¡´Â ¾ó¸¶³ª ³²±â´ÂÁö °è»ê
+        //ë ˆë²¨ì—…ì„ ìœ„í•´ ë ˆë²¨ì´ ì–¼ë§ˆë‚˜ ì˜¬ëžëŠ”ì§€, ê²½í—˜ì¹˜ëŠ” ì–¼ë§ˆë‚˜ ë‚¨ê¸°ëŠ”ì§€ ê³„ì‚°
         if (ExpPoint >= 30)
         {
             int levelUp = ExpPoint / 30;
@@ -24,5 +24,11 @@ public class PlayerModel
             ExpPoint = remain;
             Level += levelUp;
         }
+    }
+    public void SetPlayerModel(PlayerDataJson data)
+    {
+        Gold = data.Gold;
+        ExpPoint = data.ExpPoint;
+        Level = data.Level;
     }
 }

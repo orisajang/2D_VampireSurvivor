@@ -3,39 +3,58 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Video;
 
 [RequireComponent(typeof(ScanTarget))]
 public class Player : Unit
 {
-    //ÇÃ·¹ÀÌ¾îÀÇ ¹«°¡°¡ ÀÖ´Â´ë·Î ¹«±â Á¾·ù¿¡ µû¶ó °ø°İÀ» ÇÑ´Ù.
+    //í”Œë ˆì´ì–´ì˜ ë¬´ê°€ê°€ ìˆëŠ”ëŒ€ë¡œ ë¬´ê¸° ì¢…ë¥˜ì— ë”°ë¼ ê³µê²©ì„ í•œë‹¤.
     [SerializeField] private List<WeaponSO> _weaponsData = new List<WeaponSO>();
-    private List<Weapon> _weaponHaveList = new List<Weapon>();
+    //private List<Weapon> _weaponHaveList = new List<Weapon>();
+    private Dictionary<eWeaponType, Weapon> _weaponHaveDic = new Dictionary<eWeaponType, Weapon>();
 
-    //¹«±â °ø°İ ½Ã°£Ã¼Å©¿ë ÄÚ·çÆ¾
+    public WeaponModel weaponModel { get; private set; } =  new WeaponModel();
+
+    //ë¬´ê¸° ê³µê²© ì‹œê°„ì²´í¬ìš© ì½”ë£¨í‹´
     Coroutine _weaponTimeCoroutine;
     WaitForSeconds _delay = new WaitForSeconds(1);
 
-    //¹üÀ§³»ÀÇ °¡Àå °¡±î¿îÀû Å½»ö¿ë Å¬·¡½º
+    //ë²”ìœ„ë‚´ì˜ ê°€ì¥ ê°€ê¹Œìš´ì  íƒìƒ‰ìš© í´ë˜ìŠ¤
     ScanTarget _scanTarget;
 
-    //»óÅÂÆĞÅÏÀ» À§ÇÑ ÇÃ·¹ÀÌ¾î »óÅÂ ÀÎÅÍÆäÀÌ½º
+    //ìƒíƒœíŒ¨í„´ì„ ìœ„í•œ í”Œë ˆì´ì–´ ìƒíƒœ ì¸í„°í˜ì´ìŠ¤
     IPlayerState _playerState;
 
-    //¸ó½ºÅÍÇÑÅ× µ¥¹ÌÁö¹Ş¾ÒÀ»‹š (»èÁ¦¿¹Á¤)
+    //ëª¬ìŠ¤í„°í•œí…Œ ë°ë¯¸ì§€ë°›ì•˜ì„ë–„ (ì‚­ì œì˜ˆì •)
     public bool isTakeDamage = false;
 
-    //ÇÃ·¹ÀÌ¾î HP 
+    //í”Œë ˆì´ì–´ HP 
     [SerializeField] Image _hpBarImage;
     public float _CurrentHp { get; private set; }
+
+    //í”¼ê²© ì• ë‹ˆë©”ì´ì…˜ ì²˜ë¦¬ë¥¼ ìœ„í•´
+    [SerializeField] Animator animator;
 
     private void Awake()
     {
         _scanTarget = GetComponent<ScanTarget>();
-        //_hp = 10;//¿ø·¡´Â _hp°ªÀ» ÀÔ·ÂÇØ¾ßµÇ´Âµ¥ Àá½Ã ¤¡¤§
-       // _CurrentHp = _hp; //¿ø·¡´Â _hp°ªÀ» ÀÔ·ÂÇØ¾ßµÇ´Âµ¥ Àá½Ã ¤¡¤§
-        
+        PlayerAttackWithWeapon();
+
+
+        weaponModel.OnBulletLevelChanged += IncrementBulletWeaponLevel;
+        weaponModel.OnRotateShiledLevelChanged += IncrementRotateShieldWeaponLevel;
     }
-    
+    public void IncrementBulletWeaponLevel(int plusLevel)
+    {
+        _weaponHaveDic[eWeaponType.ShootBullet].LevelUp(plusLevel);
+    }
+    public void IncrementRotateShieldWeaponLevel(int plusLevel)
+    {
+        _weaponHaveDic[eWeaponType.RotateShield].LevelUp(plusLevel);
+    }
+
+
+
     private void Start()
     {
         _playerState = new PlayerIdleState(this);
@@ -43,13 +62,11 @@ public class Player : Unit
     }
     private void OnEnable()
     {
-        PlayerAttackWithWeapon();
         StartWeaponAttack();
         PlayerManager.Instance.SetPlayer(this);
     }
     private void OnDisable()
     {
-        RemoveAllWeapon();
         StopWeaponAttack();
     }
 
@@ -64,25 +81,22 @@ public class Player : Unit
         state.Enter();
     }
 
-    //¸ğµç ÇÃ·¹ÀÌ¾î ¹«±â¸¦ °¡Áö°í °ø°İÀ» ÇÑ´Ù
+    //ëª¨ë“  í”Œë ˆì´ì–´ ë¬´ê¸°ë¥¼ ê°€ì§€ê³  ê³µê²©ì„ í•œë‹¤
     public void PlayerAttackWithWeapon()
     {
         foreach (var item in _weaponsData)
         {
             eWeaponType type = item.weaponType;
-            Weapon weapon = new Weapon(item.weaponPrefab,transform, type, item.weaponDamage, item.coolDown);
+            Weapon weapon = new Weapon(item.weaponPrefab,transform, type, item.weaponDamage, item.coolDown, item.weaponSpeed);
             AddWeapon(weapon);
         }
     }
 
     private void AddWeapon(Weapon weapon)
     {
-        //¸®½ºÆ®¿¡ Ãß°¡
-        _weaponHaveList.Add(weapon);
-    }
-    private void RemoveAllWeapon()
-    {
-        _weaponHaveList = null;
+        //ë¦¬ìŠ¤íŠ¸ì— ì¶”ê°€
+        eWeaponType weaponType = weapon.WeaponType;
+        _weaponHaveDic[weaponType] = weapon;
     }
     private void StartWeaponAttack()
     {
@@ -102,9 +116,10 @@ public class Player : Unit
     {
         while(true)
         {
-            foreach(var item in _weaponHaveList)
+            foreach(var kvp in _weaponHaveDic)
             {
-                item.Tick(1, gameObject.transform, _scanTarget.NearestTarget);
+                if (kvp.Value == null) continue;
+                kvp.Value.Tick(1, gameObject.transform, _scanTarget.NearestTarget);
             }
             yield return _delay;
         }
@@ -116,6 +131,9 @@ public class Player : Unit
         {
             isTakeDamage = true;
             Monster mon = collision.gameObject.GetComponent<Monster>();
+
+            //í”¼ê²© ì• ë‹ˆë©”ì´ì…˜ ì¬ìƒ
+            animator.SetTrigger("hurt");
 
             _CurrentHp = BattleManager.Instance.CalculateDamage(_CurrentHp, mon.AttackValue, _defense);
             _hpBarImage.fillAmount = _CurrentHp / _hp;

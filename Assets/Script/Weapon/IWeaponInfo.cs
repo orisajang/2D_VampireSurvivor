@@ -5,6 +5,7 @@ using UnityEngine;
 public interface IWeaponInfo
 {
     public float Damage { get;}
+    public float Speed { get; }
 
-    public void SetWeaponDamage(float dmg);
+    public void SetWeaponInit(float dmg,float speed);
 }

@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class PlayerStunState : IPlayerState
 {
-    //ÇÃ·¹ÀÌ¾î¿Í ½ºÅÏ ½Ã°£ Á¤º¸
+    //í”Œë ˆì´ì–´ì™€ ìŠ¤í„´ ì‹œê°„ ì •ë³´
     Player _player;
     float _stunTime = 2.0f;
     float _currentTime;
 
-    //ÀÌµ¿ ºÒ°¡¸¦ À§ÇØ
+    //ì´ë™ ë¶ˆê°€ë¥¼ ìœ„í•´
     PlayerController _playerController;
 
     public PlayerStunState(Player ply)
@@ -22,7 +22,7 @@ public class PlayerStunState : IPlayerState
         _currentTime = _stunTime;
         _playerController = _player.GetComponent<PlayerController>();
         _playerController.isControllAble = false;
-        Debug.Log("ÇÃ·¹ÀÌ¾î ½ºÅÏ»óÅÂ!!");
+        Debug.Log("í”Œë ˆì´ì–´ ìŠ¤í„´ìƒíƒœ!!");
     }
 
     public void Exit()
@@ -32,11 +32,11 @@ public class PlayerStunState : IPlayerState
 
     public void Update()
     {
-        //¸ó½ºÅÍÀÇ °ø°İÀ» ¸ÂÀ¸¸é? ½ºÅÏ»óÅÂ°¡ µÈ´Ù.
+        //ëª¬ìŠ¤í„°ì˜ ê³µê²©ì„ ë§ìœ¼ë©´? ìŠ¤í„´ìƒíƒœê°€ ëœë‹¤.
         _currentTime -= Time.deltaTime;
         if(_currentTime <=0)
         {
-            //´Ù½Ã Idle »óÅÂ·Î
+            //ë‹¤ì‹œ Idle ìƒíƒœë¡œ
             _playerController.isControllAble = true;
             _player.SetState(new PlayerIdleState(_player));
         }

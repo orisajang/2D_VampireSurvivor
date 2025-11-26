@@ -9,28 +9,36 @@ public class PlayerManager : Singleton<PlayerManager>
     private Player _player;
     [SerializeField] private PlayerDataSO playerData;
     public Player _Player => _player;
-    //ÇÃ·¹ÀÌ¾î ¸ğµ¨ ÇÊ¿äÇÒ¶§¸¸ »ı¼º
-    private PlayerModel _playerModel;
+    //í”Œë ˆì´ì–´ ëª¨ë¸ í•„ìš”í• ë•Œë§Œ ìƒì„±
+    private PlayerModel _playerModel = new PlayerModel();
     public PlayerModel _PlayerModel 
     {
         get
         {
-            if (_playerModel == null) _playerModel = new PlayerModel();
             return _playerModel;
         }
     }
+    //Jsonìœ¼ë¡œ ì½ì–´ì˜¬ PlayerJsonSave
+    PlayerJsonSave playerJsonSave = new PlayerJsonSave();
+
+    //PlayerModelì˜ í•„ë“œë¥¼ PlayerModelì„ ì•Œì§€ì•Šê³ ë„ ì–»ì–´ì˜¬ìˆ˜ìˆë„ë¡
+    public int GetPlayerLevel() => _playerModel.Level;
+    public int GetPlayerGold() => _playerModel.Gold;
+    public int GetPlayerExpPoint() => _playerModel.ExpPoint;
+
     protected override void Awake()
     {
         base.Awake();
-        //¸ğµ¨ »ı¼º (UI¿¡¼­ MVPÇü½ÄÀ¸·Î »ç¿ëÇÒ)
+        //ëª¨ë¸ ìƒì„± (UIì—ì„œ MVPí˜•ì‹ìœ¼ë¡œ ì‚¬ìš©í• )
         //Model = new PlayerModel();
-        //ÇÃ·¹ÀÌ¾î »ı¼º
+        //í”Œë ˆì´ì–´ ìƒì„±
         GameObject obj = Instantiate(playerData.playerPrefab, transform.position, Quaternion.identity, null);
         PlayerController playerController = obj.GetComponent<PlayerController>();
         _player = obj.GetComponent<Player>();
-        //½ºÅ©¸³ÅÍºí ¿ÀºêÁ§Æ®¿¡ ÀÖ´Â ÃÊ±â ÇÃ·¹ÀÌ¾îÁ¤º¸¸¦ Player¿¡ ³Ö¾îÁÜ
-        playerController.SetMoveSpeed(playerData);
-        _player.SetPlayerData(playerData);
+
+        //í”Œë ˆì´ì–´ ë¶ˆëŸ¬ì™€ì•¼í•¨ ë­ì˜€ì§€ 
+        PlayerDataJson playerDataJson =  playerJsonSave.LoadData();
+        _playerModel.SetPlayerModel(playerDataJson);
     }
 
     public void SetPlayer(Player player)

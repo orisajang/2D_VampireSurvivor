@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
+    [SerializeField] Animator animator;
     private float _moveSpeed = 3.0f;
     InputAction action;
     Vector2 moveDir;
@@ -31,6 +32,24 @@ public class PlayerController : MonoBehaviour
         {
             Vector3 moveVector3 = new Vector3(moveDir.x, moveDir.y, 0).normalized;
             transform.position += (moveVector3 * Time.deltaTime * _moveSpeed);
+            animator.SetBool("isRun", true);
+
+            if(moveVector3.x > 0)
+            {
+                //transform.localScale = new Vector3(1, 1, 1);
+                transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+            }
+            else if(moveVector3.x < 0)
+            {
+                //transform.localScale = new Vector3(-1, 1, 1);
+                
+                transform.localScale = new Vector3(-Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+            }
+
+        }
+        else
+        {
+            animator.SetBool("isRun", false);
         }
     }
 }

@@ -2285,6 +2285,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bac9f7ba9910e7b4e98d0614e4fc2398, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animator: {fileID: 1090751898395723916}
   isControllAble: 1
 --- !u!114 &7862778130800922858
 MonoBehaviour:
@@ -2303,6 +2304,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 42bf4843427c19e41a832fd380a0963c, type: 2}
   isTakeDamage: 0
   _hpBarImage: {fileID: 2213433466739349476}
+  animator: {fileID: 1090751898395723916}
 --- !u!114 &667088059017427332
 MonoBehaviour:
   m_ObjectHideFlags: 0
