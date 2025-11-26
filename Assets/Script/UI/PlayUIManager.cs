@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
@@ -7,12 +7,12 @@ using UnityEngine.UI;
 
 public class PlayUIManager : Singleton<PlayUIManager>, IPlayerMVPView,IGameInterface, IStageMVPView
 {
-    //PlayGroundScene¿¡¼­ »ç¿ëÇÒ UI¿ä¼Òµé
-    [SerializeField] TextMeshProUGUI _goldText; //±İ¾×
-    [SerializeField] TextMeshProUGUI _playTimeText; //ÇÃ·¹ÀÌ½Ã°£
-    [SerializeField] TextMeshProUGUI _expPointText; //°æÇèÄ¡
-    [SerializeField] TextMeshProUGUI _levelText; //·¹º§
-    [SerializeField] TextMeshProUGUI _remainMonsterText; //³²Àº ¸ó½ºÅÍ¿Í ½ºÅ×ÀÌÁö Á¤º¸
+    //PlayGroundSceneì—ì„œ ì‚¬ìš©í•  UIìš”ì†Œë“¤
+    [SerializeField] TextMeshProUGUI _goldText; //ê¸ˆì•¡
+    [SerializeField] TextMeshProUGUI _playTimeText; //í”Œë ˆì´ì‹œê°„
+    [SerializeField] TextMeshProUGUI _expPointText; //ê²½í—˜ì¹˜
+    [SerializeField] TextMeshProUGUI _levelText; //ë ˆë²¨
+    [SerializeField] TextMeshProUGUI _remainMonsterText; //ë‚¨ì€ ëª¬ìŠ¤í„°ì™€ ìŠ¤í…Œì´ì§€ ì •ë³´
 
 
     private PlayerMVPPresenter _playerPresenter;
@@ -48,22 +48,22 @@ public class PlayUIManager : Singleton<PlayUIManager>, IPlayerMVPView,IGameInter
         _playTimeText.text = ChangeIntToTimeFormat(time);
     }
 
-    //ÃÊ ÇüÅÂÀÇ timeÀÌ¶ó´Â ¸Å°³º¯¼ö°¡ ¿ÔÀ»¶§ UI¿¡ ½Ã°£À¸·Î Ç¥½ÃÇÏ±â À§ÇØ º¯È¯ÇÏ´Â ¸Ş¼­µå
+    //ì´ˆ í˜•íƒœì˜ timeì´ë¼ëŠ” ë§¤ê°œë³€ìˆ˜ê°€ ì™”ì„ë•Œ UIì— ì‹œê°„ìœ¼ë¡œ í‘œì‹œí•˜ê¸° ìœ„í•´ ë³€í™˜í•˜ëŠ” ë©”ì„œë“œ
     private string ChangeIntToTimeFormat(int time)
     {
-        //60ÀÌ¶ó´Â ½Ã°£ÀÌ ¿Ô´Ù. ±×·¯¸é 01:00 À¸·Î ¹Ù²ã¾ßÇÔ
-        //59¶ó´Â ½Ã°£ÀÌ ¿Ô´Ù 00:59
-        //100ÀÌ¶ó´Â ½Ã°£ÀÌ ¿Ô´Ù. ±×·¯¸é 01:40 À¸·Î
+        //60ì´ë¼ëŠ” ì‹œê°„ì´ ì™”ë‹¤. ê·¸ëŸ¬ë©´ 01:00 ìœ¼ë¡œ ë°”ê¿”ì•¼í•¨
+        //59ë¼ëŠ” ì‹œê°„ì´ ì™”ë‹¤ 00:59
+        //100ì´ë¼ëŠ” ì‹œê°„ì´ ì™”ë‹¤. ê·¸ëŸ¬ë©´ 01:40 ìœ¼ë¡œ
         //100 / 60 = 1
         //100 % 60 = 40
         int minute = time / 60;
         int second = time % 60;
         string minuteStr;
         string secondStr;
-        //½Ã°£À» string Çü½ÄÀ¸·Î
+        //ì‹œê°„ì„ string í˜•ì‹ìœ¼ë¡œ
         if (minute < 10) minuteStr = "0" + minute.ToString();
         else minuteStr = minute.ToString();
-        //ºĞÀ» string Çü½ÄÀ¸·Î
+        //ë¶„ì„ string í˜•ì‹ìœ¼ë¡œ
         if (second < 10) secondStr = "0" + second.ToString();
         else secondStr = second.ToString();
 

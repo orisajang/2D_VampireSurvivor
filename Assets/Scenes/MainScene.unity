@@ -660,7 +660,7 @@ GameObject:
   - component: {fileID: 844377590}
   - component: {fileID: 844377589}
   m_Layer: 5
-  m_Name: Button (1)
+  m_Name: ExitBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -813,6 +813,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _btnStart: {fileID: 670590627}
+  _btnExit: {fileID: 844377589}
 --- !u!1 &1097623395
 GameObject:
   m_ObjectHideFlags: 0
