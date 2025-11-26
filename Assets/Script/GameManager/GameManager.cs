@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : Singleton<GameManager>
 {
@@ -55,6 +56,11 @@ public class GameManager : Singleton<GameManager>
             timeChanged?.Invoke(currentTime);
             yield return _delay;
         }
+    }
+
+    public void ChangeGameScene(int index)
+    {
+        SceneManager.LoadScene(index);
     }
 
 }

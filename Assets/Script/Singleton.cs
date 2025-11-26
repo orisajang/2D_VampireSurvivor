@@ -5,6 +5,8 @@ using UnityEngine;
 public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 {
     private static T _instance;
+    //싱글톤 구조를 가져가지만 다음씬에서 제거되어야 할때 사용 *씬별로 존재하는 UI매니저 등)
+    protected bool isDestroyOnLoad = true; 
 
     //Instance 프로퍼티와 Awake에서 둘다 null체크를 하는 이유:
     //외부에서 Instance로 호출하는경우 생성되고
@@ -38,7 +40,10 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
         else
         {
             _instance = this as T;
-            DontDestroyOnLoad(gameObject);
+            if (isDestroyOnLoad)
+            {
+                DontDestroyOnLoad(gameObject);
+            }
         }
     }
 }
