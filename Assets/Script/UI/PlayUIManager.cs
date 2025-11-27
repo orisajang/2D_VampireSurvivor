@@ -122,13 +122,13 @@ public class PlayUIManager : Singleton<PlayUIManager>, IPlayerMVPView, IGameInte
 
     public void UpdateExpValue(int expValue,int level)
     {
-        _expPointText.text = expValue.ToString();
-        _levelText.text = level.ToString();
+        _expPointText.text = "EXP: "+ expValue.ToString();
+        _levelText.text = "LEVEL: " + level.ToString();
     }
 
     public void SetRemainMonsterView(int remainMonster, int stageNum)
     {
-        _remainMonsterText.text = $"StageNum: {stageNum} remain Monset: {remainMonster} ";
+        _remainMonsterText.text = $"StageNum: {stageNum}\n remain Monset: {remainMonster} ";
     }
     public void ShowLevelUpPanel()
     {
