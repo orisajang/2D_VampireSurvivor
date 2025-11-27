@@ -23,7 +23,7 @@ public class GamePresent
 
     public void Dispose()
     {
-        GameManager.Instance.timeChanged -= TimeSet;
+        if (GameManager.isHaveInstance) GameManager.Instance.timeChanged -= TimeSet;
     }
 
 }

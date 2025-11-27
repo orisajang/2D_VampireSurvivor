@@ -12,9 +12,9 @@ public class StagePresenter
         _stageModel = StageManager.Instance._StageModel;
         _stageMVPView = stageView;
 
-        //½ºÅ×ÀÌÁö ½ÃÀÛÇÏ±âÀü¿¡ ÃÊ±â UIÁ¤º¸ ³Ö±â
+        //ìŠ¤í…Œì´ì§€ ì‹œì‘í•˜ê¸°ì „ì— ì´ˆê¸° UIì •ë³´ ë„£ê¸°
         StageManager.Instance._readStageFirstInfo += SetFirstStageData;
-        //¸ó½ºÅÍ Á¤º¸°¡ ¹Ù²ğ¶§¸¶´Ù ÀÌº¥Æ® È£ÃâµÇ±â À§ÇØ¼­ »ç¿ë
+        //ëª¬ìŠ¤í„° ì •ë³´ê°€ ë°”ë€”ë•Œë§ˆë‹¤ ì´ë²¤íŠ¸ í˜¸ì¶œë˜ê¸° ìœ„í•´ì„œ ì‚¬ìš©
         MonsterManager.Instance.OnChangedRemainMonster += SetMonsterRemain;
     }
     private void SetFirstStageData(int remainMonster)
@@ -30,7 +30,7 @@ public class StagePresenter
     }
     public void Dispose()
     {
-        StageManager.Instance._readStageFirstInfo -= SetFirstStageData;
-        MonsterManager.Instance.OnChangedRemainMonster -= SetMonsterRemain;
+        if (StageManager.isHaveInstance) StageManager.Instance._readStageFirstInfo -= SetFirstStageData;
+        if (MonsterManager.isHaveInstance) MonsterManager.Instance.OnChangedRemainMonster -= SetMonsterRemain;
     }
 }

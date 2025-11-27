@@ -23,8 +23,8 @@ public class PlayerMVPPresenter
     public void Dispose()
     {
         _model.OnLevelUp -= NotifyLevelUp;
-        MonsterManager.Instance.OnGoldEarned -= OnMonsterDead;
-        ExpPointSpawner.Instance._getExpPoint -= PickExpPoint;
+        if(MonsterManager.isHaveInstance) MonsterManager.Instance.OnGoldEarned -= OnMonsterDead;
+        if (ExpPointSpawner.isHaveInstance) ExpPointSpawner.Instance._getExpPoint -= PickExpPoint;
     }
 
     private void Init()

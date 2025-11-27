@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WeaponModel : MonoBehaviour
+public class WeaponModel
 {
     //public int bulletShootLevel;
     //public int rotateShieldLevel;

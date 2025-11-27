@@ -5,21 +5,23 @@ using UnityEngine;
 public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 {
     private static T _instance;
-    //½Ì±ÛÅæ ±¸Á¶¸¦ °¡Á®°¡Áö¸¸ ´ÙÀ½¾À¿¡¼­ Á¦°ÅµÇ¾î¾ß ÇÒ¶§ »ç¿ë *¾Àº°·Î Á¸ÀçÇÏ´Â UI¸Å´ÏÀú µî)
-    protected bool isDestroyOnLoad = true; 
+    //ì‹±ê¸€í†¤ êµ¬ì¡°ë¥¼ ê°€ì ¸ê°€ì§€ë§Œ ë‹¤ìŒì”¬ì—ì„œ ì œê±°ë˜ì–´ì•¼ í• ë•Œ ì‚¬ìš© *ì”¬ë³„ë¡œ ì¡´ì¬í•˜ëŠ” UIë§¤ë‹ˆì € ë“±)
+    protected bool isDestroyOnLoad = true;
+    //MVPì—ì„œ ì‹±ê¸€í†¤ ë§¤ë‹ˆì €ì˜ ì´ë²¤íŠ¸ë¥¼ í•´ì œ(Dispose)í•´ì•¼ë˜ëŠ”ë° ì´ë•Œ Nullì²´í¬ê°€ í•„ìš”í•´ì„œ ì¶”ê°€
+    public static bool isHaveInstance => _instance != null;
 
-    //Instance ÇÁ·ÎÆÛÆ¼¿Í Awake¿¡¼­ µÑ´Ù nullÃ¼Å©¸¦ ÇÏ´Â ÀÌÀ¯:
-    //¿ÜºÎ¿¡¼­ Instance·Î È£ÃâÇÏ´Â°æ¿ì »ı¼ºµÇ°í
-    //ÀÌ¹Ì ¾À¿¡¼­ »ı¼ºµÇ¾îÀÖÀ»°æ¿ì ÇÁ·ÎÆÛÆ¼·Î È£ÃâµÇÁö´Â¾Ê°í Awake¿¡¼­ ÃÖÃÊ È£ÃâµÇ¹Ç·Î
+    //Instance í”„ë¡œí¼í‹°ì™€ Awakeì—ì„œ ë‘˜ë‹¤ nullì²´í¬ë¥¼ í•˜ëŠ” ì´ìœ :
+    //ì™¸ë¶€ì—ì„œ Instanceë¡œ í˜¸ì¶œí•˜ëŠ”ê²½ìš° ìƒì„±ë˜ê³ 
+    //ì´ë¯¸ ì”¬ì—ì„œ ìƒì„±ë˜ì–´ìˆì„ê²½ìš° í”„ë¡œí¼í‹°ë¡œ í˜¸ì¶œë˜ì§€ëŠ”ì•Šê³  Awakeì—ì„œ ìµœì´ˆ í˜¸ì¶œë˜ë¯€ë¡œ
 
-    //¿ÜºÎ È£Ãâ¿ë ÇÁ·ÎÆÛÆ¼, ÇØ´ç Å¸ÀÔÀÇ ½Ì±ÛÅæÀÌ ¾øÀ¸¸é Ã£¾Æº¸°í ±×·¡µµ ¾øÀ¸¸é »õ·Î »ı¼º ÈÄ °áÁ¤
+    //ì™¸ë¶€ í˜¸ì¶œìš© í”„ë¡œí¼í‹°, í•´ë‹¹ íƒ€ì…ì˜ ì‹±ê¸€í†¤ì´ ì—†ìœ¼ë©´ ì°¾ì•„ë³´ê³  ê·¸ë˜ë„ ì—†ìœ¼ë©´ ìƒˆë¡œ ìƒì„± í›„ ê²°ì •
     public static T Instance
     {
         get
         {
             if (_instance == null)
             {
-                _instance = FindObjectOfType<T>(); //Ã£¾Æº½
+                _instance = FindObjectOfType<T>(); //ì°¾ì•„ë´„
 
                 if (_instance == null)
                 {
@@ -31,7 +33,7 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
             return _instance;
         }
     }
-    protected virtual void Awake() //Áßº¹Ã¼Å© ¹× ¿¬°á±â´É ±¸Çö (ÀçÁ¤ÀÇ °¡´É)
+    protected virtual void Awake() //ì¤‘ë³µì²´í¬ ë° ì—°ê²°ê¸°ëŠ¥ êµ¬í˜„ (ì¬ì •ì˜ ê°€ëŠ¥)
     {
         if (_instance != null && _instance != this)
         {
