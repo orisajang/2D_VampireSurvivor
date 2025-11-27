@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d78568286b41a049833f4cee0ddbab3, type: 3}
   m_Name: PlayerData
   m_EditorClassIdentifier: 
-  hp: 10
+  hp: 3
   defense: 0
   moveSpeed: 10
   playerPrefab: {fileID: 7460739469218924793, guid: 4edc473449d3f7c4ea62457c83d91c0b, type: 3}

@@ -6,15 +6,16 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : Singleton<GameManager>
 {
-    //°ÔÀÓ ½ÃÀÛ, ÀÏ½ÃÁ¤Áö, Àç½ÃÀÛ, ÇöÀç °ÔÀÓ ½Ã°£À» °¡Áö°íÀÖ´Â´Ù
+    //ê²Œì„ ì‹œì‘, ì¼ì‹œì •ì§€, ì¬ì‹œì‘, í˜„ì¬ ê²Œì„ ì‹œê°„ì„ ê°€ì§€ê³ ìˆëŠ”ë‹¤
     int currentTime;
     public event Action<int> timeChanged;
+    public event Action<bool> gameEnd;
 
-    //1ÃÊ¸¶´Ù µ¿ÀÛÇÏ´Â ÄÚ·çÆ¾
+    //1ì´ˆë§ˆë‹¤ ë™ì‘í•˜ëŠ” ì½”ë£¨í‹´
     Coroutine secondTimeRoutine;
     WaitForSeconds _delay;
 
-    //°ÔÀÓ ¸ğµ¨
+    //ê²Œì„ ëª¨ë¸
     private GameModel _gameModel;
     public GameModel _GameModel 
     { 
@@ -28,7 +29,7 @@ public class GameManager : Singleton<GameManager>
     protected override void Awake()
     {
         base.Awake();
-        //¹«Á¶°Ç 1ÃÊ¸¶´Ù ÁøÇàÇÒ ÄÚ·çÆ¾À» À§ÇØ
+        //ë¬´ì¡°ê±´ 1ì´ˆë§ˆë‹¤ ì§„í–‰í•  ì½”ë£¨í‹´ì„ ìœ„í•´
         _delay = new WaitForSeconds(1.0f);
         //GameModel = new GameModel();
     }
@@ -47,7 +48,7 @@ public class GameManager : Singleton<GameManager>
             secondTimeRoutine = null;
         }
     }
-    //1ÃÊ¸¶´Ù °ÔÀÓ½Ã°£À» 1ÃÊ¾¿ ¿Ã·ÁÁØ´Ù
+    //1ì´ˆë§ˆë‹¤ ê²Œì„ì‹œê°„ì„ 1ì´ˆì”© ì˜¬ë ¤ì¤€ë‹¤
     IEnumerator TimeTick()
     {
         while(true)
@@ -58,9 +59,24 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
+    //ì”¬ ì „í™˜
     public void ChangeGameScene(int index)
     {
         SceneManager.LoadScene(index);
     }
 
+    //ê²Œì„ ì¢…ë£Œ, í´ë¦¬ì–´ ì—¬ë¶€ë¥¼ UIì— ë„˜ê²¨ì¤Œ
+    public void GameOver(bool isClear)
+    {
+        //í´ë¦¬ì–´í–ˆìœ¼ë©´ isClear true, ì•„ë‹ˆë©´ falseë¡œ ì „ë‹¬
+        gameEnd?.Invoke(isClear);
+    }
+    public void GameStop()
+    {
+        Time.timeScale = 0;
+    }
+    public void GameResume()
+    {
+        Time.timeScale = 1;
+    }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,8 @@ public class Bullet : MonoBehaviour, IWeaponInfo
     //[SerializeField] float _bulletSpeed = 2.0f;
     [SerializeField] Transform _moveDir;
     Rigidbody2D _rigidbody;
+
+    public event Action<Bullet> destroyBullet;
 
     //무기의 공격력
     public float Damage { get; private set; }
@@ -41,6 +44,12 @@ public class Bullet : MonoBehaviour, IWeaponInfo
         }
     }
 
-
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.CompareTag("Wall"))
+        {
+            destroyBullet?.Invoke(this);
+        }
+    }
 
 }

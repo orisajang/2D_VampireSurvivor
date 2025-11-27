@@ -5,45 +5,46 @@ using UnityEngine;
 
 public class MonsterManager : Singleton<MonsterManager>
 {
-    //½ºÅ©¸³ÅÍºí ¿ÀºêÁ§Æ®·Î ¸ó½ºÅÍ¸¦ ¼ÒÈ¯ÇÒ¶§¸¶´Ù ¸ó½ºÅÍ Á¤º¸¸¦ ³ÖÀ»°ÍÀÌ´Ù. 
-    //¿ÀºêÁ§Æ® Ç®À» ÀÌ¿ëÇÏ¿© ¸ó½ºÅÍ Å¸ÀÔ¸¶´Ù ¸ó½ºÅÍ¸¦ ¹Ì¸® »ı¼ºÇÒ °ÍÀÌ´Ù.
+    //ìŠ¤í¬ë¦½í„°ë¸” ì˜¤ë¸Œì íŠ¸ë¡œ ëª¬ìŠ¤í„°ë¥¼ ì†Œí™˜í• ë•Œë§ˆë‹¤ ëª¬ìŠ¤í„° ì •ë³´ë¥¼ ë„£ì„ê²ƒì´ë‹¤. 
+    //ì˜¤ë¸Œì íŠ¸ í’€ì„ ì´ìš©í•˜ì—¬ ëª¬ìŠ¤í„° íƒ€ì…ë§ˆë‹¤ ëª¬ìŠ¤í„°ë¥¼ ë¯¸ë¦¬ ìƒì„±í•  ê²ƒì´ë‹¤.
 
-    //¸ó½ºÅÍ Á¤º¸(½ºÅ©¸³ÅÍºí ¿ÀºêÁ§Æ®)
+    //ëª¬ìŠ¤í„° ì •ë³´(ìŠ¤í¬ë¦½í„°ë¸” ì˜¤ë¸Œì íŠ¸)
     [SerializeField] List<MonsterSO> monsterDatas = new List<MonsterSO>();
-    //¼ÒÈ¯ÀÌ ³¡³µ´ÂÁö
+    //ì†Œí™˜ì´ ëë‚¬ëŠ”ì§€
     bool isSpawnFinished = false;
-    //¾ÕÀ¸·Î ¼ÒÈ¯µÉ ¸ó½ºÅÍ °³¼ö
+    //ì•ìœ¼ë¡œ ì†Œí™˜ë  ëª¬ìŠ¤í„° ê°œìˆ˜
     int remainMonsterDecreaseCount = 0;
-    //½ºÅ×ÀÌÁö¿¡ ³²Àº ¸ó½ºÅÍ °³¼ö
+    //ìŠ¤í…Œì´ì§€ì— ë‚¨ì€ ëª¬ìŠ¤í„° ê°œìˆ˜
     int remainMonstrCount = 0;
 
-    //¼ÒÈ¯ ÁöÁ¡ Á¤º¸
+    //ì†Œí™˜ ì§€ì  ì •ë³´
     [SerializeField] Transform spawnPointInfo;
     List<Transform> spawnPoints = new List<Transform>();
 
-    //¿ÀºêÁ§Æ®Ç® (¸ó½ºÅÍ Å¸ÀÔº°)
+    //ì˜¤ë¸Œì íŠ¸í’€ (ëª¬ìŠ¤í„° íƒ€ì…ë³„)
     [SerializeField] int poolSize = 10;
     private Dictionary<eMonsterType, ObjPool<Monster>> monsterPools = new Dictionary<eMonsterType, ObjPool<Monster>>();
 
-    //¼ÒÈ¯ ÄÚ·çÆ¾
+    //ì†Œí™˜ ì½”ë£¨í‹´
     Coroutine spawnCoroutine;
     WaitForSeconds _spawnDelay;
 
-    //¸ó½ºÅÍ »ç¸Á ÀÌº¥Æ®
+    //ëª¬ìŠ¤í„° ì‚¬ë§ ì´ë²¤íŠ¸
     //public delegate void MonsterDeadDeleagte(int reward, int remainMonster);
-    //public event MonsterDeadDeleagte monsterDead; //¸ó½ºÅÍ »ç¸ÁÇÏ¸é ±İ¾× ¹İÈ¯
+    //public event MonsterDeadDeleagte monsterDead; //ëª¬ìŠ¤í„° ì‚¬ë§í•˜ë©´ ê¸ˆì•¡ ë°˜í™˜
     public event Action<int> OnGoldEarned;
     public event Action<int> OnChangedRemainMonster;
 
-    //½ºÅ×ÀÌÁö¸Å´ÏÀú¿¡¼­ ³Ñ¾î¿À´Â ¼ÒÈ¯µÉ ¸ó½ºÅÍ enum¸®½ºÆ®
+    //ìŠ¤í…Œì´ì§€ë§¤ë‹ˆì €ì—ì„œ ë„˜ì–´ì˜¤ëŠ” ì†Œí™˜ë  ëª¬ìŠ¤í„° enumë¦¬ìŠ¤íŠ¸
     List<eMonsterType> spawnMonsterInfo = new List<eMonsterType>();
     [SerializeField] int spawnTime = 2;
 
 
     protected override void Awake()
     {
+        isDestroyOnLoad = false;
         base.Awake();
-        //ÃÊ±â ¿ÀºêÁ§Æ®Ç® ¼³Á¤
+        //ì´ˆê¸° ì˜¤ë¸Œì íŠ¸í’€ ì„¤ì •
         foreach(var item in monsterDatas)
         {
             eMonsterType type = item.monsterType;
@@ -51,17 +52,17 @@ public class MonsterManager : Singleton<MonsterManager>
             monsterPools[type] = new ObjPool<Monster>(monsterBuf, poolSize, gameObject.transform);
         }
 
-        //¸ó½ºÅÍ ¼ÒÈ¯ÁöÁ¡ ¼³Á¤
+        //ëª¬ìŠ¤í„° ì†Œí™˜ì§€ì  ì„¤ì •
         SetSpawnPoint();
         _spawnDelay = new WaitForSeconds(spawnTime);
     }
-    //½ºÅ×ÀÌÁö ¸Å´ÏÀú¿¡¼­ ¸ó½ºÅÍ ¼ÒÈ¯ ¸®½ºÆ®¸¦ ¹ŞÀ½
+    //ìŠ¤í…Œì´ì§€ ë§¤ë‹ˆì €ì—ì„œ ëª¬ìŠ¤í„° ì†Œí™˜ ë¦¬ìŠ¤íŠ¸ë¥¼ ë°›ìŒ
     public void SetMonsterInfo(List<eMonsterType> type)
     {
         spawnMonsterInfo = new List<eMonsterType>(type);
         remainMonsterDecreaseCount = type.Count;
     }
-    //½ºÅ×ÀÌÁö ¸Å´ÏÀú¿¡¼­ ½ÃÀÛ ¸í·ÉÀ» ³»¸®¸é ¸ó½ºÅÍ ¼ÒÈ¯ ½ÃÀÛ
+    //ìŠ¤í…Œì´ì§€ ë§¤ë‹ˆì €ì—ì„œ ì‹œì‘ ëª…ë ¹ì„ ë‚´ë¦¬ë©´ ëª¬ìŠ¤í„° ì†Œí™˜ ì‹œì‘
     public void StartSummonMonsters()
     {
         if (spawnCoroutine == null)
@@ -78,51 +79,51 @@ public class MonsterManager : Singleton<MonsterManager>
         }
     }
 
-    //¸ó½ºÅÍ »ı¼º (¿ÀºêÁ§Æ®Ç®¿¡¼­ ÇÏ³ª¾¿ ²¨³¿)
+    //ëª¬ìŠ¤í„° ìƒì„± (ì˜¤ë¸Œì íŠ¸í’€ì—ì„œ í•˜ë‚˜ì”© êº¼ëƒ„)
     public void SpawnMonster(eMonsterType type)
     {
-        //¸ó½ºÅÍ ÃÊ±â ¼³Á¤
+        //ëª¬ìŠ¤í„° ì´ˆê¸° ì„¤ì •
         Monster monsterBuf = monsterPools[type].GetObject();
         monsterBuf.deathEvent += DeSpawnMonster;
 
-        //¸ó½ºÅÍ ¼ÒÈ¯ À§Ä¡ ÁöÁ¤
+        //ëª¬ìŠ¤í„° ì†Œí™˜ ìœ„ì¹˜ ì§€ì •
         int selectPoint = UnityEngine.Random.Range(0, spawnPoints.Count);
         monsterBuf.transform.position = spawnPoints[selectPoint].position;
 
-        //½ºÅ©¸³ÅÍºí ¿ÀºêÁ§Æ®¿¡¼­ ¸ó½ºÅÍ´É·ÂÄ¡ Á¤º¸¸¦ Set ÇØÁØ´Ù
+        //ìŠ¤í¬ë¦½í„°ë¸” ì˜¤ë¸Œì íŠ¸ì—ì„œ ëª¬ìŠ¤í„°ëŠ¥ë ¥ì¹˜ ì •ë³´ë¥¼ Set í•´ì¤€ë‹¤
         MonsterSO monsterInfo = monsterDatas.Find(x => x.monsterType == type);
         monsterBuf.Init(monsterInfo);
 
-        //¼ÒÈ¯µÈ ¸ó½ºÅÍ °³¼ö count
+        //ì†Œí™˜ëœ ëª¬ìŠ¤í„° ê°œìˆ˜ count
         remainMonstrCount++;
     }
 
     public void DeSpawnMonster(Monster mon)
     {
-        //Ä«¿îÆ® Â÷°¨
+        //ì¹´ìš´íŠ¸ ì°¨ê°
         remainMonstrCount--;
         remainMonsterDecreaseCount--;
-        //°æÇèÄ¡ ±¸½½ »ı¼º
+        //ê²½í—˜ì¹˜ êµ¬ìŠ¬ ìƒì„±
         ExpPointSpawner.Instance.CreateExpPoint(mon.transform);
-        //¸ó½ºÅÍ »ç¸Á ÀÌº¥Æ® Invoke
+        //ëª¬ìŠ¤í„° ì‚¬ë§ ì´ë²¤íŠ¸ Invoke
         NotifyMonsterDead(mon.Reward, remainMonsterDecreaseCount);
-        //¸ó½ºÅÍ Ç®¿¡ ¹İÈ¯
+        //ëª¬ìŠ¤í„° í’€ì— ë°˜í™˜
         mon.deathEvent -= DeSpawnMonster;
         eMonsterType type = mon.MonsterType;
         monsterPools[type].ReturnObject(mon);
         
 
-        //´ÙÀ½½ºÅ×ÀÌÁö·Î ³Ñ¾î°¡´Â Á¶°ÇÀ» ¸¸Á·ÇÏ´ÂÁö Ã¼Å©
-        //¼ÒÈ¯ÇØ¾ßÇÒ ¸ó½ºÅÍ°¡ ´õÀÌ»ó¾ø°í, ½ºÅ×ÀÌÁö¿¡ ³²Àº ¸ó½ºÅÍ°¡ ¾ø´Ù¸é
+        //ë‹¤ìŒìŠ¤í…Œì´ì§€ë¡œ ë„˜ì–´ê°€ëŠ” ì¡°ê±´ì„ ë§Œì¡±í•˜ëŠ”ì§€ ì²´í¬
+        //ì†Œí™˜í•´ì•¼í•  ëª¬ìŠ¤í„°ê°€ ë”ì´ìƒì—†ê³ , ìŠ¤í…Œì´ì§€ì— ë‚¨ì€ ëª¬ìŠ¤í„°ê°€ ì—†ë‹¤ë©´
         if (isSpawnFinished && remainMonstrCount == 0)
         {
-            //´ÙÀ½½ºÅ×ÀÌÁö¿¡¼­ »ç¿ëÇÒ ¼ö ÀÖ°Ô °ü·Ã ÇÊµå ÃÊ±âÈ­
+            //ë‹¤ìŒìŠ¤í…Œì´ì§€ì—ì„œ ì‚¬ìš©í•  ìˆ˜ ìˆê²Œ ê´€ë ¨ í•„ë“œ ì´ˆê¸°í™”
             InitForNextStage();
             StageManager.Instance.GoToNextStage();
         }
     }
 
-    //¸ó½ºÅÍ »ç¸Á½Ã ¹ßµ¿ÇØ¾ßÇÏ´Â ÀÌº¥µåµé ¸Ş¼­µå·Î °ü¸®ÇÒ¼öÀÖ°Ô ¹­À½
+    //ëª¬ìŠ¤í„° ì‚¬ë§ì‹œ ë°œë™í•´ì•¼í•˜ëŠ” ì´ë²¤ë“œë“¤ ë©”ì„œë“œë¡œ ê´€ë¦¬í• ìˆ˜ìˆê²Œ ë¬¶ìŒ
     public void NotifyMonsterDead(int reward, int remainMonster)
     {
         OnGoldEarned?.Invoke(reward);
@@ -142,7 +143,7 @@ public class MonsterManager : Singleton<MonsterManager>
         spawnMonsterInfo = new List<eMonsterType>();
     }
 
-    //ÄÚ·çÆ¾À¸·Î »ı¼º
+    //ì½”ë£¨í‹´ìœ¼ë¡œ ìƒì„±
     IEnumerator SpawnMonsterRoutine(List<eMonsterType> monsterInfos)
     {
         foreach(var item in monsterInfos)

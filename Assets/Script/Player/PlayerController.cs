@@ -22,9 +22,17 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         action = InputSystem.actions["Move"];
+        rigidbody2D = GetComponent<Rigidbody2D>();
+    }
+    private void OnEnable()
+    {
         action.performed += PlayerMove;
         action.canceled += PlayerStop;
-        rigidbody2D = GetComponent<Rigidbody2D>();
+    }
+    private void OnDisable()
+    {
+        action.performed -= PlayerMove;
+        action.canceled -= PlayerStop;
     }
     public void SetMoveSpeed(PlayerDataSO playerData)
     {
@@ -37,7 +45,7 @@ public class PlayerController : MonoBehaviour
     private void PlayerStop(InputAction.CallbackContext ctx)
     {
         //이동키에 손을떼면 바로 멈추도록 (1회)
-        moveDir = Vector2.zero; 
+        moveDir = Vector2.zero;
         rigidbody2D.velocity = Vector2.zero;
     }
     private void FixedUpdate()

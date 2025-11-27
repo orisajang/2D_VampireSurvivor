@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class ExpPointSpawner : Singleton<ExpPointSpawner>
 {
-    //¿ÀºêÁ§Æ®Ç® ÇÁ¸®ÆÕ,»çÀÌÁî , ¼±¾ğ
+    //ì˜¤ë¸Œì íŠ¸í’€ í”„ë¦¬íŒ¹,ì‚¬ì´ì¦ˆ , ì„ ì–¸
     [SerializeField] ExpPointScript _expPointPrefab;
     [SerializeField] int poolSize = 10;
     ObjPool<ExpPointScript> _expPointPool;
@@ -13,22 +13,23 @@ public class ExpPointSpawner : Singleton<ExpPointSpawner>
 
     protected override void Awake()
     {
+        isDestroyOnLoad = false;
         base.Awake();
         _expPointPool = new ObjPool<ExpPointScript>(_expPointPrefab, poolSize, gameObject.transform);
     }
-    //»ı¼º ÄÚµå
+    //ìƒì„± ì½”ë“œ
     public void CreateExpPoint(Transform trf)
     {
         ExpPointScript expBuf =  _expPointPool.GetObject();
         expBuf.transform.position = trf.position;
         expBuf._destroyExpPoint += DisableExpPoint;
     }
-    //¿ÀºêÁ§Æ® ¹İÈ¯
+    //ì˜¤ë¸Œì íŠ¸ ë°˜í™˜
     private void DisableExpPoint(ExpPointScript expPoint)
     {
         expPoint._destroyExpPoint -= DisableExpPoint;
         _expPointPool.ReturnObject(expPoint);
-        //°æÇèÄ¡¸¦ ÁÖ¿üÀ»¶§ 
+        //ê²½í—˜ì¹˜ë¥¼ ì£¼ì› ì„ë•Œ 
         _getExpPoint?.Invoke(10);
     }
 }

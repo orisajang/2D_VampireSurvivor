@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class ExpPointScript : MonoBehaviour
 {
-    //ÄÚ·çÆ¾À¸·Î ÇÃ·¹ÀÌ¾î°¡ ÁÖº¯¿¡ ÀÖ´ÂÁö È®ÀÎ
+    //ì½”ë£¨í‹´ìœ¼ë¡œ í”Œë ˆì´ì–´ê°€ ì£¼ë³€ì— ìˆëŠ”ì§€ í™•ì¸
     [SerializeField] private float searchDelay = 1.0f;
     [SerializeField] private float distance = 5.0f;
     private Coroutine findPlayerRoutine;
@@ -13,7 +13,7 @@ public class ExpPointScript : MonoBehaviour
     private Player _player;
     private Rigidbody2D _rigidbody;
 
-    //¿ÀºêÁ§Æ®Ç®¿¡ ¹İÈ¯ÇÏ±âÀ§ÇÑ ÀÌº¥Æ®
+    //ì˜¤ë¸Œì íŠ¸í’€ì— ë°˜í™˜í•˜ê¸°ìœ„í•œ ì´ë²¤íŠ¸
     public event Action<ExpPointScript> _destroyExpPoint;
 
     private void Awake()
@@ -42,7 +42,7 @@ public class ExpPointScript : MonoBehaviour
     }
     IEnumerator SearchPlayerInRange()
     {
-        //ÇÃ·¹ÀÌ¾î°¡ nullÀÌ ¾Æ´Ò¶§±îÁö ´ë±â
+        //í”Œë ˆì´ì–´ê°€ nullì´ ì•„ë‹ë•Œê¹Œì§€ ëŒ€ê¸°
         yield return new WaitUntil(()=> PlayerManager.Instance._Player != null);
         _player = PlayerManager.Instance._Player;
         while (true)
@@ -63,10 +63,10 @@ public class ExpPointScript : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("¹ßµ¿");
+        Debug.Log("ë°œë™");
         if (collision.CompareTag("Player"))
         {
-            Debug.Log("ÀÌº¥Æ®±îÁö¹ßµ¿");
+            Debug.Log("ì´ë²¤íŠ¸ê¹Œì§€ë°œë™");
             _destroyExpPoint?.Invoke(this);
         }
     }

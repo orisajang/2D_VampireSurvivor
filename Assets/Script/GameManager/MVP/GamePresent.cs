@@ -13,6 +13,7 @@ public class GamePresent
         _gameInterface = game;
 
         GameManager.Instance.timeChanged += TimeSet;
+        GameManager.Instance.gameEnd += GameClear;
     }
 
     public void TimeSet(int time)
@@ -20,10 +21,15 @@ public class GamePresent
         _gameModel.SetTime(time);
         _gameInterface.UpdateGameTime(_gameModel.CurrentTime);
     }
+    public void GameClear(bool isClear)
+    {
+        _gameInterface.ShowGameResult(isClear);
+    }
 
     public void Dispose()
     {
         if (GameManager.isHaveInstance) GameManager.Instance.timeChanged -= TimeSet;
+        if (GameManager.isHaveInstance) GameManager.Instance.gameEnd -= GameClear;
     }
 
 }

@@ -47,6 +47,5 @@ public class PlayerMVPPresenter
         _model.AddExpPoint(amount);
         _playerView.UpdateExpValue(_model.ExpPoint, _model.Level);
     }
-
     
 }

@@ -13,10 +13,15 @@ public class PlayUIManager : Singleton<PlayUIManager>, IPlayerMVPView, IGameInte
     [SerializeField] TextMeshProUGUI _expPointText; //경험치
     [SerializeField] TextMeshProUGUI _levelText; //레벨
     [SerializeField] TextMeshProUGUI _remainMonsterText; //남은 몬스터와 스테이지 정보
+    [SerializeField] Button _gameSaveBtn; //게임 저장 버튼 (플레이어 정보가 저장됨)
+    //무기 업그레이드 패널
+    [SerializeField] GameObject _levelUpPanel; //무기 업그레이드 패널 (플레이어 레벨업하면 띄움)
     [SerializeField] Button _bulletUpgradeBtn; //총알 업그레이드 버튼
     [SerializeField] Button _rotateShieldBtn; //회전방패 업그레이드 버튼
-    [SerializeField] Button _gameSaveBtn; //게임 저장 버튼 (플레이어 정보가 저장됨)
-    [SerializeField] GameObject _levelUpPanel; //무기 업그레이드 패널 (플레이어 레벨업하면 띄움)
+    //게임 클리어 여부 패널
+    [SerializeField] GameObject _gameResultPanel;
+    [SerializeField] TextMeshProUGUI _gameResultText;
+    [SerializeField] Button _gameReultButton;
 
 
     private PlayerMVPPresenter _playerPresenter;
@@ -36,9 +41,13 @@ public class PlayUIManager : Singleton<PlayUIManager>, IPlayerMVPView, IGameInte
         weaponMVPPresenter = new WeaponMVPPresenter(PlayerManager.Instance._Player.weaponModel);
 
         //버튼클릭 이벤트
+        //무기 업그레이드 버튼
         _bulletUpgradeBtn.onClick.AddListener(OnBulletUpgradeButtonClick);
         _rotateShieldBtn.onClick.AddListener(OnRotateShieldUpgradeButtonClick);
+        //저장버튼
         _gameSaveBtn.onClick.AddListener(OnSaveButtonClick);
+        //메인화면 돌아가는 버튼
+        _gameReultButton.onClick.AddListener(OnReturnMainButtonClick);
     }
 
 
@@ -47,19 +56,24 @@ public class PlayUIManager : Singleton<PlayUIManager>, IPlayerMVPView, IGameInte
     {
         weaponMVPPresenter.OnClickBulletUpMethod();
         _levelUpPanel.SetActive(false);
-        PlayerManager.Instance.GameResume();
+        GameManager.Instance.GameResume();
     }
     public void OnRotateShieldUpgradeButtonClick()
     {
         weaponMVPPresenter.OnClickRotateShieldMethod();
         _levelUpPanel.SetActive(false);
-        PlayerManager.Instance.GameResume();
+        GameManager.Instance.GameResume();
     }
     public void OnSaveButtonClick()
     {
         PlayerManager.Instance._playerJsonSave.SaveData();
     }
-
+    public void OnReturnMainButtonClick()
+    {
+        _gameResultPanel.SetActive(false);
+        GameManager.Instance.ChangeGameScene(0); 
+        GameManager.Instance.GameResume();
+    }
 
     private void OnDisable()
     {
@@ -77,7 +91,13 @@ public class PlayUIManager : Singleton<PlayUIManager>, IPlayerMVPView, IGameInte
     {
         _playTimeText.text = ChangeIntToTimeFormat(time);
     }
-
+    public void ShowGameResult(bool isClear)
+    {
+        GameManager.Instance.GameStop();
+        _gameResultPanel.SetActive(true);
+        if (isClear) _gameResultText.text = "Clear !!!";
+        else _gameResultText.text = "Fail.. ";
+    }
     //초 형태의 time이라는 매개변수가 왔을때 UI에 시간으로 표시하기 위해 변환하는 메서드
     private string ChangeIntToTimeFormat(int time)
     {
@@ -113,6 +133,6 @@ public class PlayUIManager : Singleton<PlayUIManager>, IPlayerMVPView, IGameInte
     public void ShowLevelUpPanel()
     {
         _levelUpPanel.SetActive(true);
-        PlayerManager.Instance.GameStop();
+        GameManager.Instance.GameStop();
     }
 }

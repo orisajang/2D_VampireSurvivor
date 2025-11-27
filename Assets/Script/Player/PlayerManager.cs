@@ -31,6 +31,7 @@ public class PlayerManager : Singleton<PlayerManager>
 
     protected override void Awake()
     {
+        isDestroyOnLoad = false;
         base.Awake();
         //모델 생성 (UI에서 MVP형식으로 사용할)
         //Model = new PlayerModel();
@@ -41,20 +42,27 @@ public class PlayerManager : Singleton<PlayerManager>
 
         //플레이어 불러와야함 뭐였지 
         PlayerDataJson playerDataJson =  _playerJsonSave.LoadData();
+        //플레이어 모델 설정 (JSON)
         _playerModel.SetPlayerModel(playerDataJson);
+        //플레이어 데이터 설정 (스크립터블 오브젝트 -> 시간이 없어서 그냥썼는데 JSON으로 통합해도 가능함)
+        _Player.SetPlayerData(playerData);
+    }
+    private void OnEnable()
+    {
+        _Player.OnplayerDead += NotifyPlayerDeadToModel;
+    }
+    private void OnDisable()
+    {
+        _Player.OnplayerDead -= NotifyPlayerDeadToModel;
+    }
+
+    private void NotifyPlayerDeadToModel()
+    {
+        GameManager.Instance.GameOver(false);
     }
 
     public void SetPlayer(Player player)
     {
         _player = player;
-    }
-
-    public void GameStop()
-    {
-        Time.timeScale = 0;
-    }
-    public void GameResume()
-    {
-        Time.timeScale = 1;
     }
 }

@@ -5,13 +5,13 @@ using UnityEngine;
 
 public class StageManager : Singleton<StageManager>
 {
-    //½ºÅ×ÀÌÁö Á¤º¸ (½ºÅ©¸³ÅÍºí¿ÀºêÁ§Æ®¿¡¼­ °¡Á®¿È)
+    //ìŠ¤í…Œì´ì§€ ì •ë³´ (ìŠ¤í¬ë¦½í„°ë¸”ì˜¤ë¸Œì íŠ¸ì—ì„œ ê°€ì ¸ì˜´)
     [SerializeField] private List<StageDataSO> _stageDataList;
-    //ÇöÀç ½ºÅ×ÀÌÁö ¹øÈ£
+    //í˜„ì¬ ìŠ¤í…Œì´ì§€ ë²ˆí˜¸
     public int _currentStageNum { get; private set; } = 0;
-    //MVPÆĞÅÏÀ¸·Î Presenter¿Í ¿¬°áÇÏ±âÀ§ÇÑ modelÀ» Á¤ÀÇ
+    //MVPíŒ¨í„´ìœ¼ë¡œ Presenterì™€ ì—°ê²°í•˜ê¸°ìœ„í•œ modelì„ ì •ì˜
     private StageModel _stageModel;
-    //ÇÁ·¯ÆÛÆ¼·Î _stageModelÀÌ ÇÊ¿äÇÒ¶§ new ÇØÁà¼­ Å¬·¡½º°£ Awake¼ø¼­ »ó°ü¾øÀÌ ¹Ì¸® Á¤ÀÇÇÒ ¼ö ÀÖµµ·Ï Ã³¸®
+    //í”„ëŸ¬í¼í‹°ë¡œ _stageModelì´ í•„ìš”í• ë•Œ new í•´ì¤˜ì„œ í´ë˜ìŠ¤ê°„ Awakeìˆœì„œ ìƒê´€ì—†ì´ ë¯¸ë¦¬ ì •ì˜í•  ìˆ˜ ìˆë„ë¡ ì²˜ë¦¬
     public StageModel _StageModel { 
         get
         {
@@ -19,12 +19,12 @@ public class StageManager : Singleton<StageManager>
             return _stageModel;
         }
     }
-    //ÃÊ±â ½ºÅ×ÀÌÁö Á¤º¸ ³Ñ°ÜÁÜ
+    //ì´ˆê¸° ìŠ¤í…Œì´ì§€ ì •ë³´ ë„˜ê²¨ì¤Œ
     public event Action<int> _readStageFirstInfo;
     protected override void Awake()
     {
+        isDestroyOnLoad = false;
         base.Awake();
-        //_stageModel = new StageModel();
     }
     private void Start()
     {
@@ -32,18 +32,18 @@ public class StageManager : Singleton<StageManager>
         SendStageStart();
     }
 
-    //ÇöÀç ½ºÅ×ÀÌÁö Á¤º¸¸¦ º¸³½´Ù.
+    //í˜„ì¬ ìŠ¤í…Œì´ì§€ ì •ë³´ë¥¼ ë³´ë‚¸ë‹¤.
     public void SendStageMonsterInfo()
     {
         MonsterManager.Instance.SetMonsterInfo(_stageDataList[_currentStageNum].monsterInfoList);
     }
-    //½ºÅ×ÀÌÁö ½ÃÀÛ ¸í·É
+    //ìŠ¤í…Œì´ì§€ ì‹œì‘ ëª…ë ¹
     public void SendStageStart()
     {
-        Debug.Log("ÇöÀç ½ºÅ×ÀÌÁö´Â " + _currentStageNum);
+        Debug.Log("í˜„ì¬ ìŠ¤í…Œì´ì§€ëŠ” " + _currentStageNum);
         MonsterManager.Instance.StartSummonMonsters();
 
-        //½ºÅ×ÀÌÁö ½ÃÀÛÇÒ¶§¸¶´Ù ÃÊ±â Á¤º¸ ³Ö¾îÁÜ
+        //ìŠ¤í…Œì´ì§€ ì‹œì‘í• ë•Œë§ˆë‹¤ ì´ˆê¸° ì •ë³´ ë„£ì–´ì¤Œ
         int monsterRemainCount = _stageDataList[_currentStageNum].monsterInfoList.Count;
         _readStageFirstInfo?.Invoke(monsterRemainCount);
     }
@@ -55,15 +55,20 @@ public class StageManager : Singleton<StageManager>
             SendStageMonsterInfo();
             SendStageStart();
         }
+        else
+        {
+            //ê²Œì„ ë
+            GameManager.Instance.GameOver(true);
+        }
     }
 
-    //Ã³À½¿¡´Â ½ºÅ×ÀÌÁö 0¹øÀ» ¼³Á¤½ÃÅ²´Ù
-    //°ÔÀÓ½ÃÀÛ ¹öÆ°ÀÌ ´­¸®¸é ½ºÅ×ÀÌÁö¸Å´ÏÀúÀÇ ½ÃÀÛ¸Ş¼­µå°¡ È£ÃâµÈ´Ù
-    //½ºÅ×ÀÌÁö ¸Å´ÏÀú°¡ °¡Áö°íÀÖ´Â ¸ó½ºÅÍenum¸®½ºÆ®¸¦ ¸ó½ºÅÍ¸Å´ÏÀú¿¡ Àü´ŞÇÑ´Ù
-    //¸ó½ºÅÍ¸¦ ´ÙÀâÀ¸¸é? -> ´ÙÀ½ ½ºÅ×ÀÌÁö·Î °¡¾ßÇÑ´Ù.
-    //´Ù Àâ¾Ò´Ù´Â ±âÁØÀº? -> ¸ó½ºÅÍ ¸Å´ÏÀú°¡ °¡Áö°íÀÖ´Ù.
-    //¸ó½ºÅÍ¸Å´ÏÀú Ç®¿¡¼­ ´Ù »ç¶óÁ³À¸¸é? -> ÀÌº¥Æ®¸¦ ¹ßµ¿
-    //StageManager°¡ ÀÌº¥Æ® ¹ŞÀ¸¸é tage¹øÈ£¸¦ ++ÇÏ°í SO¿¡¼­ Ã£¾Æ¼­ Á¤º¸¸¦ setÇÏ°í ´ÙÀ½ ½ºÅ×ÀÌÁöÁ¤º¸¸¦ ´Ù½Ã ¸ó½ºÅÍ ¸Å´ÏÀú¿¡ Àü´Ş.
-    //¸ó½ºÅÍ¸Å´ÏÀú´Â ´Ù½Ã ¸ó½ºÅÍ¸¦ ¼ÒÈ¯ÇÑ´Ù.
+    //ì²˜ìŒì—ëŠ” ìŠ¤í…Œì´ì§€ 0ë²ˆì„ ì„¤ì •ì‹œí‚¨ë‹¤
+    //ê²Œì„ì‹œì‘ ë²„íŠ¼ì´ ëˆŒë¦¬ë©´ ìŠ¤í…Œì´ì§€ë§¤ë‹ˆì €ì˜ ì‹œì‘ë©”ì„œë“œê°€ í˜¸ì¶œëœë‹¤
+    //ìŠ¤í…Œì´ì§€ ë§¤ë‹ˆì €ê°€ ê°€ì§€ê³ ìˆëŠ” ëª¬ìŠ¤í„°enumë¦¬ìŠ¤íŠ¸ë¥¼ ëª¬ìŠ¤í„°ë§¤ë‹ˆì €ì— ì „ë‹¬í•œë‹¤
+    //ëª¬ìŠ¤í„°ë¥¼ ë‹¤ì¡ìœ¼ë©´? -> ë‹¤ìŒ ìŠ¤í…Œì´ì§€ë¡œ ê°€ì•¼í•œë‹¤.
+    //ë‹¤ ì¡ì•˜ë‹¤ëŠ” ê¸°ì¤€ì€? -> ëª¬ìŠ¤í„° ë§¤ë‹ˆì €ê°€ ê°€ì§€ê³ ìˆë‹¤.
+    //ëª¬ìŠ¤í„°ë§¤ë‹ˆì € í’€ì—ì„œ ë‹¤ ì‚¬ë¼ì¡Œìœ¼ë©´? -> ì´ë²¤íŠ¸ë¥¼ ë°œë™
+    //StageManagerê°€ ì´ë²¤íŠ¸ ë°›ìœ¼ë©´ tageë²ˆí˜¸ë¥¼ ++í•˜ê³  SOì—ì„œ ì°¾ì•„ì„œ ì •ë³´ë¥¼ setí•˜ê³  ë‹¤ìŒ ìŠ¤í…Œì´ì§€ì •ë³´ë¥¼ ë‹¤ì‹œ ëª¬ìŠ¤í„° ë§¤ë‹ˆì €ì— ì „ë‹¬.
+    //ëª¬ìŠ¤í„°ë§¤ë‹ˆì €ëŠ” ë‹¤ì‹œ ëª¬ìŠ¤í„°ë¥¼ ì†Œí™˜í•œë‹¤.
 
 }

@@ -37,6 +37,8 @@ public class Player : Unit
     //플레이어 HP 
     [SerializeField] Image _hpBarImage;
     public float _CurrentHp { get; private set; }
+    //플레이어 HP가 0인지 체크
+    public event Action OnplayerDead;
 
     //피격 애니메이션 처리를 위해
     [SerializeField] Animator animator;
@@ -158,6 +160,10 @@ public class Player : Unit
 
             _CurrentHp = BattleManager.Instance.CalculateDamage(_CurrentHp, mon.AttackValue, _defense);
             _hpBarImage.fillAmount = _CurrentHp / _hp;
+            if(_CurrentHp <= 0)
+            {
+                OnplayerDead?.Invoke();
+            }
         }
     }
 

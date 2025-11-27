@@ -12,11 +12,11 @@ public class BattleManager : Singleton<BattleManager>
 
     public  float CalculateDamage(float hp, float attack, float defense)
     {
-        //µ¥¹ÌÁö °è»ê ¹× ¿¹¿ÜÃ³¸®
+        //ë°ë¯¸ì§€ ê³„ì‚° ë° ì˜ˆì™¸ì²˜ë¦¬
         float dmg = attack - defense;
         if (dmg < 0) dmg = 0;
 
-        //hp°è»ê
+        //hpê³„ì‚°
         float currentHp = hp - dmg;
         if (currentHp < 0) currentHp = 0;
 
