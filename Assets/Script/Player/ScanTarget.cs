@@ -1,10 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ScanTarget : MonoBehaviour
 {
-    //ÇÃ·¹ÀÌ¾î¿Í °¡Àå °¡±î¿î ÀûÀ» Å½»öÇÏ´Â Å¬·¡½º
+    //í”Œë ˆì´ì–´ì™€ ê°€ìž¥ ê°€ê¹Œìš´ ì ì„ íƒìƒ‰í•˜ëŠ” í´ëž˜ìŠ¤
 
     Transform _nearestTarget;
     [SerializeField] float _radius = 10f;
@@ -12,25 +10,30 @@ public class ScanTarget : MonoBehaviour
     RaycastHit2D[] _raycastHits;
     float _distance;
 
-    //Get Àü¿ë ÇÁ·¯ÆÛÆ¼
+    //Get ì „ìš© í”„ëŸ¬í¼í‹°
     public Transform NearestTarget => _nearestTarget;
 
     private void FixedUpdate()
     {
-        //¹üÀ§¾È ¸ðµç Àûµé Å½»ö
+        //ë²”ìœ„ì•ˆ ëª¨ë“  ì ë“¤ íƒìƒ‰
         _raycastHits = Physics2D.CircleCastAll(transform.position, _radius, Vector2.zero, 0, _layer);
-        //Á¦ÀÏ °¡±î¿î ¸ó½ºÅÍ Å½»ö
-        if(_raycastHits.Length > 0)
+        //ì œì¼ ê°€ê¹Œìš´ ëª¬ìŠ¤í„° íƒìƒ‰
+        if (_raycastHits.Length > 0)
         {
-            //Ã³À½¿¡´Â Ã¹¹øÂ° °Å¸®·Î ³ÖÀ½
+            //ì²˜ìŒì—ëŠ” ì²«ë²ˆì§¸ ê±°ë¦¬ë¡œ ë„£ìŒ
             _distance = Vector2.Distance(transform.position, _raycastHits[0].transform.position);
             _nearestTarget = _raycastHits[0].transform;
         }
-        foreach(var item in _raycastHits)
+        else
         {
-            //°Å¸®°¡ ´õ ÀÛ´Ù¸é ÀÛÀºÂÊÀ» ÀúÀåÇÑ´Ù.
+            //ì£¼ë³€ì— ëª©í‘œê°€ ì—†ìœ¼ë©´ nullë¡œ ì„¤ì •í•´ì„œ ì´ì•Œ ë°œì‚¬ ì•ˆí•˜ë„ë¡, 
+            _nearestTarget = null; 
+        }
+        foreach (var item in _raycastHits)
+        {
+            //ê±°ë¦¬ê°€ ë” ìž‘ë‹¤ë©´ ìž‘ì€ìª½ì„ ì €ìž¥í•œë‹¤.
             float diff = Vector2.Distance(transform.position, item.transform.position);
-            if(_distance > diff)
+            if (_distance > diff)
             {
                 _distance = diff;
                 _nearestTarget = item.transform;

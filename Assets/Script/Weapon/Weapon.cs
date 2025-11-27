@@ -82,11 +82,15 @@ public class Weapon
         //총알 발사
         Debug.Log("발사공격");
         //GameObject obj = GameObject.Instantiate(_prefab, _firePosition.position, _firePosition.rotation, null);
-        Bullet bullet = objPoolBullet.GetObject();
-        bullet.SetBulletMoveDirection(shotDir, PlayerManager.Instance._Player.transform.position);
-        bullet.SetWeaponInit(_weaponDamage,_weaponSpeed);
-        bullet.destroyBullet += ReturnBullet;
-        SoundManager.Instance.PlayThisClip(0);
+        if(shotDir != null)
+        {
+            Bullet bullet = objPoolBullet.GetObject();
+            bullet.SetBulletMoveDirection(shotDir, PlayerManager.Instance._Player.transform.position);
+            bullet.SetWeaponInit(_weaponDamage, _weaponSpeed);
+            bullet.destroyBullet += ReturnBullet;
+            bullet.BulletAddForce(); //총알 발사
+            SoundManager.Instance.PlayThisClip(0);
+        }
     }
     private void ShootRotateShield(Transform plyDir)
     {

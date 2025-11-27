@@ -55,16 +55,18 @@ public class CSVParser
     public void Load(CSV Target)
     {
         // 파일 경로 지정
-        string filePath = Application.dataPath + "/Database/CSV/" + Target.Path + ".csv";
+        //string filePath = Application.dataPath + "Resources/Database/CSV/" + Target.Path + ".csv";
+        TextAsset csvFile = Resources.Load<TextAsset>("Database/CSV/" + Target.Path);
 
         // 지정된 경로에 파일이 존재하는 경우에만 읽어야 한다.
-        if (File.Exists(filePath))
+        if (csvFile != null)
+        //if (File.Exists(filePath))
         {
             // 경로의 파일을 텍스트로 읽어들인다.
-            string csvFile = File.ReadAllText(filePath);
+            //string csvFile = File.ReadAllText(filePath);
 
             // 개행문자 단위로 줄을 나눈 뒤, 배열에 담는다.
-            string[] lines = csvFile.Split('\n');
+            string[] lines = csvFile.text.Split('\n');
 
             // 모든 줄을 순회하면서
             for (int l = 1; l < lines.Length; l++)

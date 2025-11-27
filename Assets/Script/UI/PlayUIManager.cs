@@ -51,7 +51,7 @@ public class PlayUIManager : Singleton<PlayUIManager>, IPlayerMVPView, IGameInte
     }
 
 
-    //버튼클릭되면
+    //버튼클릭되면 하는 메서드들 정리
     public void OnBulletUpgradeButtonClick()
     {
         weaponMVPPresenter.OnClickBulletUpMethod();
@@ -71,6 +71,7 @@ public class PlayUIManager : Singleton<PlayUIManager>, IPlayerMVPView, IGameInte
     public void OnReturnMainButtonClick()
     {
         _gameResultPanel.SetActive(false);
+        GameManager.Instance.InitGameInfo();
         GameManager.Instance.ChangeGameScene(0); 
         GameManager.Instance.GameResume();
     }

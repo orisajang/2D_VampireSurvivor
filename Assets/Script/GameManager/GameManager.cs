@@ -64,6 +64,11 @@ public class GameManager : Singleton<GameManager>
     {
         SceneManager.LoadScene(index);
     }
+    //게임 재시작하면서 초기화해야할 정보 모아둠
+    public void InitGameInfo()
+    {
+        currentTime = 0;
+    }
 
     //게임 종료, 클리어 여부를 UI에 넘겨줌
     public void GameOver(bool isClear)

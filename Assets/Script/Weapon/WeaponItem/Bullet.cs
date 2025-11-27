@@ -34,7 +34,7 @@ public class Bullet : MonoBehaviour, IWeaponInfo
         _rigidbody = GetComponent<Rigidbody2D>();
     }
 
-    private void Start()
+    public void BulletAddForce()
     {
         if (_moveDir != null)
         {
