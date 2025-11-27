@@ -10379,6 +10379,7 @@ MonoBehaviour:
   _bulletUpgradeBtn: {fileID: 1920411940}
   _rotateShieldBtn: {fileID: 565468317}
   _gameSaveBtn: {fileID: 2070557852}
+  _levelUpPanel: {fileID: 16023552}
 --- !u!4 &1459504651
 Transform:
   m_ObjectHideFlags: 0

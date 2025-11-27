@@ -16,6 +16,7 @@ public class PlayUIManager : Singleton<PlayUIManager>, IPlayerMVPView, IGameInte
     [SerializeField] Button _bulletUpgradeBtn; //총알 업그레이드 버튼
     [SerializeField] Button _rotateShieldBtn; //회전방패 업그레이드 버튼
     [SerializeField] Button _gameSaveBtn; //게임 저장 버튼 (플레이어 정보가 저장됨)
+    [SerializeField] GameObject _levelUpPanel; //무기 업그레이드 패널 (플레이어 레벨업하면 띄움)
 
 
     private PlayerMVPPresenter _playerPresenter;
@@ -45,10 +46,14 @@ public class PlayUIManager : Singleton<PlayUIManager>, IPlayerMVPView, IGameInte
     public void OnBulletUpgradeButtonClick()
     {
         weaponMVPPresenter.OnClickBulletUpMethod();
+        _levelUpPanel.SetActive(false);
+        PlayerManager.Instance.GameResume();
     }
     public void OnRotateShieldUpgradeButtonClick()
     {
         weaponMVPPresenter.OnClickRotateShieldMethod();
+        _levelUpPanel.SetActive(false);
+        PlayerManager.Instance.GameResume();
     }
     public void OnSaveButtonClick()
     {
@@ -104,5 +109,10 @@ public class PlayUIManager : Singleton<PlayUIManager>, IPlayerMVPView, IGameInte
     public void SetRemainMonsterView(int remainMonster, int stageNum)
     {
         _remainMonsterText.text = $"StageNum: {stageNum} remain Monset: {remainMonster} ";
+    }
+    public void ShowLevelUpPanel()
+    {
+        _levelUpPanel.SetActive(true);
+        PlayerManager.Instance.GameStop();
     }
 }

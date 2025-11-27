@@ -48,4 +48,13 @@ public class PlayerManager : Singleton<PlayerManager>
     {
         _player = player;
     }
+
+    public void GameStop()
+    {
+        Time.timeScale = 0;
+    }
+    public void GameResume()
+    {
+        Time.timeScale = 1;
+    }
 }

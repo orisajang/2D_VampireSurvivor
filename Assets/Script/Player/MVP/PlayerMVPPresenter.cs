@@ -12,17 +12,29 @@ public class PlayerMVPPresenter
         _model = PlayerManager.Instance._PlayerModel;
         _playerView = view;
 
-        //ÃÊ±â¿¡ °æÇèÄ¡¿Í GoldÀ» UI¿¡ Ç¥½ÃÇØÁÖ±â À§ÇØ¼­ »ç¿ë
+        //ì´ˆê¸°ì— ê²½í—˜ì¹˜ì™€ Goldì„ UIì— í‘œì‹œí•´ì£¼ê¸° ìœ„í•´ì„œ ì‚¬ìš©
         Init();
 
+        //ì´ë²¤íŠ¸ë“¤ êµ¬ë…
+        _model.OnLevelUp += NotifyLevelUp;
         MonsterManager.Instance.OnGoldEarned += OnMonsterDead;
         ExpPointSpawner.Instance._getExpPoint += PickExpPoint;
+    }
+    public void Dispose()
+    {
+        _model.OnLevelUp -= NotifyLevelUp;
+        MonsterManager.Instance.OnGoldEarned -= OnMonsterDead;
+        ExpPointSpawner.Instance._getExpPoint -= PickExpPoint;
     }
 
     private void Init()
     {
         _playerView.UpdateGoldValue(_model.Gold);
         _playerView.UpdateExpValue(_model.ExpPoint, _model.Level);
+    }
+    private void NotifyLevelUp()
+    {
+        _playerView.ShowLevelUpPanel();
     }
 
     private void OnMonsterDead(int reward)
@@ -36,9 +48,5 @@ public class PlayerMVPPresenter
         _playerView.UpdateExpValue(_model.ExpPoint, _model.Level);
     }
 
-    public void Dispose()
-    {
-        MonsterManager.Instance.OnGoldEarned -= OnMonsterDead;
-        ExpPointSpawner.Instance._getExpPoint -= PickExpPoint;
-    }
+    
 }
