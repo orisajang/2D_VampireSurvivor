@@ -15,6 +15,7 @@ public class PlayUIManager : Singleton<PlayUIManager>, IPlayerMVPView, IGameInte
     [SerializeField] TextMeshProUGUI _remainMonsterText; //남은 몬스터와 스테이지 정보
     [SerializeField] Button _bulletUpgradeBtn; //총알 업그레이드 버튼
     [SerializeField] Button _rotateShieldBtn; //회전방패 업그레이드 버튼
+    [SerializeField] Button _gameSaveBtn; //게임 저장 버튼 (플레이어 정보가 저장됨)
 
 
     private PlayerMVPPresenter _playerPresenter;
@@ -36,6 +37,7 @@ public class PlayUIManager : Singleton<PlayUIManager>, IPlayerMVPView, IGameInte
         //버튼클릭 이벤트
         _bulletUpgradeBtn.onClick.AddListener(OnBulletUpgradeButtonClick);
         _rotateShieldBtn.onClick.AddListener(OnRotateShieldUpgradeButtonClick);
+        _gameSaveBtn.onClick.AddListener(OnSaveButtonClick);
     }
 
 
@@ -48,6 +50,11 @@ public class PlayUIManager : Singleton<PlayUIManager>, IPlayerMVPView, IGameInte
     {
         weaponMVPPresenter.OnClickRotateShieldMethod();
     }
+    public void OnSaveButtonClick()
+    {
+        PlayerManager.Instance._playerJsonSave.SaveData();
+    }
+
 
     private void OnDisable()
     {

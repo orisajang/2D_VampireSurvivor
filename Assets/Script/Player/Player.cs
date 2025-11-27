@@ -9,7 +9,13 @@ using UnityEngine.Video;
 public class Player : Unit
 {
     //플레이어의 무가가 있는대로 무기 종류에 따라 공격을 한다.
-    [SerializeField] private List<WeaponSO> _weaponsData = new List<WeaponSO>();
+    //아래는 처음부터 SO사용했을때 코드. 안써서 주석(추후 삭제예정)
+    //[SerializeField] private List<WeaponSO> _weaponsData = new List<WeaponSO>();
+
+    //CSV파일로 무기 정보를 받아온다
+    WeaponCSVLoader loader = new WeaponCSVLoader();
+    List<WeaponCSVData> _weaponCSVDataList = new List<WeaponCSVData>();
+
     //private List<Weapon> _weaponHaveList = new List<Weapon>();
     private Dictionary<eWeaponType, Weapon> _weaponHaveDic = new Dictionary<eWeaponType, Weapon>();
 
@@ -37,6 +43,10 @@ public class Player : Unit
 
     private void Awake()
     {
+        //csv
+        _weaponCSVDataList = loader.LoadWeaponData("WeaponCSVData");
+
+
         _scanTarget = GetComponent<ScanTarget>();
         PlayerAttackWithWeapon();
 
@@ -44,6 +54,31 @@ public class Player : Unit
         weaponModel.OnBulletLevelChanged += IncrementBulletWeaponLevel;
         weaponModel.OnRotateShiledLevelChanged += IncrementRotateShieldWeaponLevel;
     }
+    public void SetData(List<List<string>> Data)
+    {
+        foreach (var item in Data)
+        {
+            WeaponCSVData weaponData = new WeaponCSVData();
+            weaponData.weaponDamage = int.Parse(item[0]);
+            weaponData.weaponSpeed = float.Parse(item[1]);
+            weaponData.coolDown = int.Parse(item[2]);
+            weaponData.weaponType = (eWeaponType)Enum.Parse(typeof(eWeaponType), item[3]);
+            weaponData.prefabKey = item[4];
+            _weaponCSVDataList.Add(weaponData);
+        }
+    }
+    private void AssignPrefabs()
+    {
+        //PrefabManager prefabManager = FindObjectOfType<PrefabManager>();
+
+        foreach (var w in _weaponCSVDataList)
+        {
+            w.weaponPrefab = PrefabManager.Instance.GetPrefab(w.prefabKey);
+        }
+
+        Debug.Log("Prefab 연결 완료");
+    }
+
     public void IncrementBulletWeaponLevel(int plusLevel)
     {
         _weaponHaveDic[eWeaponType.ShootBullet].LevelUp(plusLevel);
@@ -84,11 +119,20 @@ public class Player : Unit
     //모든 플레이어 무기를 가지고 공격을 한다
     public void PlayerAttackWithWeapon()
     {
+        /*
         foreach (var item in _weaponsData)
         {
             eWeaponType type = item.weaponType;
             Transform weaponSpawnPos = PlayerManager.Instance.playerWeaponSpawner;
             Weapon weapon = new Weapon(item.weaponPrefab,transform, type, item.weaponDamage, item.coolDown, item.weaponSpeed, weaponSpawnPos);
+            AddWeapon(weapon);
+        }
+        */
+        foreach(var item in _weaponCSVDataList)
+        {
+            eWeaponType type = item.weaponType;
+            Transform weaponSpawnPos = PlayerManager.Instance.playerWeaponSpawner;
+            Weapon weapon = new Weapon(item.weaponPrefab, transform, type, item.weaponDamage, item.coolDown, item.weaponSpeed, weaponSpawnPos);
             AddWeapon(weapon);
         }
     }

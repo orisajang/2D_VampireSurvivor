@@ -1,0 +1,3 @@
+﻿index,Damage,Speed,CoolDown,WeaponType,Prefab
+0,4,2,2,ShootBullet,BulletPrefab
+1,3,10,5,RotateShield,RotateShieldPrefab

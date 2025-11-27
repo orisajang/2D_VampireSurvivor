@@ -14,7 +14,7 @@ public class PlayerManager : Singleton<PlayerManager>
     public PlayerController _PlayerController { get; private set; }
     //플레이어 모델 필요할때만 생성
     private PlayerModel _playerModel = new PlayerModel();
-    public PlayerModel _PlayerModel 
+    public PlayerModel _PlayerModel
     {
         get
         {
@@ -22,7 +22,7 @@ public class PlayerManager : Singleton<PlayerManager>
         }
     }
     //Json으로 읽어올 PlayerJsonSave
-    PlayerJsonSave playerJsonSave = new PlayerJsonSave();
+    public PlayerJsonSave _playerJsonSave { get; private set; } = new PlayerJsonSave();
 
     //PlayerModel의 필드를 PlayerModel을 알지않고도 얻어올수있도록
     public int GetPlayerLevel() => _playerModel.Level;
@@ -40,7 +40,7 @@ public class PlayerManager : Singleton<PlayerManager>
         _player = obj.GetComponent<Player>();
 
         //플레이어 불러와야함 뭐였지 
-        PlayerDataJson playerDataJson =  playerJsonSave.LoadData();
+        PlayerDataJson playerDataJson =  _playerJsonSave.LoadData();
         _playerModel.SetPlayerModel(playerDataJson);
     }
 
