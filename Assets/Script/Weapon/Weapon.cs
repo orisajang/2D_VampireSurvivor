@@ -85,6 +85,7 @@ public class Weapon
         Bullet bullet = objPoolBullet.GetObject();
         bullet.SetBulletMoveDirection(shotDir, PlayerManager.Instance._Player.transform.position);
         bullet.SetWeaponInit(_weaponDamage,_weaponSpeed);
+        SoundManager.Instance.PlayThisClip(0);
     }
     private void ShootRotateShield(Transform plyDir)
     {
@@ -95,6 +96,7 @@ public class Weapon
         rotateShield.SetRotatePoint(plyDir);
         rotateShield.SetWeaponInit(_weaponDamage,_weaponSpeed);
         rotateShieldList.Add(rotateShield);
+        SoundManager.Instance.PlayThisClip(1);
     }
 
     public void LevelUp(int weaponLevel)
