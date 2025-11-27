@@ -19,7 +19,21 @@ public class PrefabManager : Singleton<PrefabManager>
     {
         isDestroyOnLoad = false;
         base.Awake();
+    }
 
+    public GameObject GetPrefab(string key)
+    {
+        //초기 설정
+        if (prefabDict == null) SetInit();
+        //키값으로 탐색
+        if (prefabDict.TryGetValue(key, out GameObject prefab))
+            return prefab;
+        Debug.LogError("Prefab not found: " + key);
+        return null;
+    }
+
+    private void SetInit()
+    {
         prefabDict = new Dictionary<string, GameObject>();
         foreach (var entry in prefabs)
         {
@@ -28,11 +42,4 @@ public class PrefabManager : Singleton<PrefabManager>
         }
     }
 
-    public GameObject GetPrefab(string key)
-    {
-        if (prefabDict.TryGetValue(key, out GameObject prefab))
-            return prefab;
-        Debug.LogError("Prefab not found: " + key);
-        return null;
-    }
 }

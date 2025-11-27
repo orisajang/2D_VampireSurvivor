@@ -54,30 +54,6 @@ public class Player : Unit
         weaponModel.OnBulletLevelChanged += IncrementBulletWeaponLevel;
         weaponModel.OnRotateShiledLevelChanged += IncrementRotateShieldWeaponLevel;
     }
-    public void SetData(List<List<string>> Data)
-    {
-        foreach (var item in Data)
-        {
-            WeaponCSVData weaponData = new WeaponCSVData();
-            weaponData.weaponDamage = int.Parse(item[0]);
-            weaponData.weaponSpeed = float.Parse(item[1]);
-            weaponData.coolDown = int.Parse(item[2]);
-            weaponData.weaponType = (eWeaponType)Enum.Parse(typeof(eWeaponType), item[3]);
-            weaponData.prefabKey = item[4];
-            _weaponCSVDataList.Add(weaponData);
-        }
-    }
-    private void AssignPrefabs()
-    {
-        //PrefabManager prefabManager = FindObjectOfType<PrefabManager>();
-
-        foreach (var w in _weaponCSVDataList)
-        {
-            w.weaponPrefab = PrefabManager.Instance.GetPrefab(w.prefabKey);
-        }
-
-        Debug.Log("Prefab 연결 완료");
-    }
 
     public void IncrementBulletWeaponLevel(int plusLevel)
     {

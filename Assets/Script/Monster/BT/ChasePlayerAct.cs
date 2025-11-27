@@ -20,6 +20,19 @@ public class ChasePlayerAct : ConditionNode
     {
         Vector3 direction = (_player.position - _enemy.position).normalized;
         _rigidbody.velocity = direction * _moveSpeed;
+
+        //방향 전환
+        Vector3 scale = _enemy.localScale;
+        if(direction.x > 0)
+        {
+            scale.x = -Mathf.Abs(scale.x);
+        }
+        else
+        {
+            scale.x = Mathf.Abs(scale.x);
+        }
+        _enemy.localScale = scale;
+
         //_enemy.position += direction * _moveSpeed * Time.deltaTime;
         return NodeState.Running;
     }
