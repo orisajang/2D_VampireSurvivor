@@ -2289,7 +2289,6 @@ MonoBehaviour:
   animator: {fileID: 1090751898395723916}
   playerCharacterPrefab: {fileID: 1090751898395723919}
   <playerShiedSpawnPoint>k__BackingField: {fileID: 6898597238334716096}
-  isControllAble: 1
 --- !u!114 &7862778130800922858
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2302,9 +2301,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c3809dac30804e4f8c3db4f272f1949, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _weaponsData:
-  - {fileID: 11400000, guid: b98bad6911d5f674ab893dd323bf6c3e, type: 2}
-  - {fileID: 11400000, guid: 42bf4843427c19e41a832fd380a0963c, type: 2}
   isTakeDamage: 0
   _hpBarImage: {fileID: 2213433466739349476}
   animator: {fileID: 1090751898395723916}
@@ -2333,7 +2329,7 @@ CapsuleCollider2D:
   m_GameObject: {fileID: 7460739469218924793}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: cb828d2e0e9586949b261f63de0c5189, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0

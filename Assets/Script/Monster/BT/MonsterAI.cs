@@ -29,7 +29,7 @@ public class MonsterAI : MonoBehaviour
             new IdleAct(_rigidbody)
         });
     }
-    private void FixedUpdate()
+    private void Update()
     {
         _root.Tick();
     }

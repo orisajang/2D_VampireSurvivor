@@ -21,7 +21,7 @@ public class PlayerStunState : IPlayerState
     {
         _currentTime = _stunTime;
         _playerController = _player.GetComponent<PlayerController>();
-        _playerController.isControllAble = false;
+        _playerController._IsControllAble = false;
         Debug.Log("플레이어 스턴상태!!");
     }
 
@@ -37,7 +37,7 @@ public class PlayerStunState : IPlayerState
         if(_currentTime <=0)
         {
             //다시 Idle 상태로
-            _playerController.isControllAble = true;
+            _playerController._IsControllAble = true;
             _player.SetState(new PlayerIdleState(_player));
         }
     }

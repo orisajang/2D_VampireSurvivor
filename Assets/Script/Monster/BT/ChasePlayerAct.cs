@@ -19,8 +19,7 @@ public class ChasePlayerAct : ConditionNode
     public override NodeState Tick()
     {
         Vector3 direction = (_player.position - _enemy.position).normalized;
-        _rigidbody.velocity = direction * _moveSpeed;
-
+        _enemy.position += direction * _moveSpeed * Time.deltaTime;
         //방향 전환
         Vector3 scale = _enemy.localScale;
         if(direction.x > 0)
@@ -33,7 +32,6 @@ public class ChasePlayerAct : ConditionNode
         }
         _enemy.localScale = scale;
 
-        //_enemy.position += direction * _moveSpeed * Time.deltaTime;
         return NodeState.Running;
     }
 }
